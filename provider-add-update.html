@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add / Update Blood Stock – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --accent-green-light: rgba(39, 174, 96, 0.1);
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --border-color: #e8e8e8;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-green: 0 8px 25px rgba(39, 174, 96, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f0fff4 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.06) 0%, transparent 70%);
+            top: -120px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.04) 0%, transparent 70%);
+            top: 40%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+
+        .bg-circle:nth-child(4) {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.03) 0%, transparent 70%);
+            bottom: 20%;
+            right: 3%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(25px, -35px) scale(1.04); }
+            50% { transform: translate(-15px, 25px) scale(0.96); }
+            75% { transform: translate(20px, 12px) scale(1.02); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .stock-container {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            padding: 12px 24px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--accent-green);
+            background: var(--accent-green-light);
+            border-color: rgba(39, 174, 96, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        /* ===== STOCK CARD ===== */
+        .stock-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px 45px;
+            box-shadow: 
+                0 25px 60px rgba(39, 174, 96, 0.08),
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-green-dark), var(--accent-green));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== HEADER ===== */
+        .stock-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+            position: relative;
+            animation: iconPulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3); }
+            50% { box-shadow: 0 10px 45px rgba(39, 174, 96, 0.5); }
+        }
+
+        .header-icon i {
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+
+        .header-icon .plus-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-icon .plus-badge i {
+            font-size: 0.9rem;
+            color: var(--accent-green);
+        }
+
+        .stock-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stock-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.12), rgba(231, 76, 60, 0.04));
+            border: 1px solid rgba(231, 76, 60, 0.25);
+        }
+
+        .message.error i {
+            color: var(--error-red);
+            font-size: 1.3rem;
+        }
+
+        .message.error span {
+            color: var(--error-red);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.12), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.25);
+        }
+
+        .message.success i {
+            color: var(--success-green);
+            font-size: 1.3rem;
+        }
+
+        .message.success span {
+            color: var(--success-green);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .message.info {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.12), rgba(52, 152, 219, 0.04));
+            border: 1px solid rgba(52, 152, 219, 0.25);
+        }
+
+        .message.info i {
+            color: #3498db;
+            font-size: 1.3rem;
+        }
+
+        .message.info span {
+            color: #3498db;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== FORM ===== */
+        .stock-form {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* ===== FORM GROUP ===== */
+        .form-group {
+            position: relative;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.15s; }
+        .form-group:nth-child(3) { animation-delay: 0.2s; }
+        .form-group:nth-child(4) { animation-delay: 0.25s; }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .form-label .label-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-green-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-label .label-icon i {
+            font-size: 0.85rem;
+            color: var(--accent-green);
+        }
+
+        .form-label .readonly-badge {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: #f0f0f0;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 17px 18px 17px 52px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.12);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--accent-green);
+        }
+
+        /* Read-only Input */
+        .form-input.readonly {
+            background: #f5f5f5;
+            color: var(--text-dark);
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+
+        .form-input.readonly:focus {
+            border-color: #e0e0e0;
+            box-shadow: none;
+        }
+
+        .lock-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Select Dropdown */
+        .form-select {
+            width: 100%;
+            padding: 17px 18px 17px 52px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .form-select:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.12);
+        }
+
+        .form-select:focus ~ .input-icon {
+            color: var(--accent-green);
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .form-select:focus ~ .select-arrow {
+            color: var(--accent-green);
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        /* Number Input */
+        .form-input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .form-input[type="number"]::-webkit-outer-spin-button,
+        .form-input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .unit-controls {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .unit-btn {
+            width: 30px;
+            height: 22px;
+            background: var(--accent-green-light);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .unit-btn:hover {
+            background: var(--accent-green);
+        }
+
+        .unit-btn i {
+            font-size: 0.7rem;
+            color: var(--accent-green);
+            transition: var(--transition);
+        }
+
+        .unit-btn:hover i {
+            color: var(--white);
+        }
+
+        /* ===== BLOOD GROUP VISUAL ===== */
+        .blood-group-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.08), rgba(220, 53, 69, 0.03));
+            border-radius: 16px;
+            margin-top: 10px;
+            border: 1px dashed rgba(220, 53, 69, 0.2);
+            display: none;
+        }
+
+        .blood-group-preview.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .blood-drop-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .blood-drop-icon span {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .blood-info {
+            text-align: left;
+        }
+
+        .blood-info .group-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        .blood-info .units-count {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+            animation: fadeInUp 0.5s ease-out 0.3s backwards;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: var(--white);
+            box-shadow: var(--shadow-green);
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.6s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+
+        .btn-submit i {
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover i {
+            transform: rotate(15deg);
+        }
+
+        /* Dashboard Button */
+        .btn-dashboard {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-dashboard:hover {
+            background: var(--accent-green-light);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .btn-dashboard i {
+            transition: var(--transition);
+        }
+
+        .btn-dashboard:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* View Stock Button */
+        .btn-view-stock {
+            background: var(--white);
+            color: var(--primary-red);
+            border: 2px solid var(--primary-red);
+        }
+
+        .btn-view-stock:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* Loading State */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .btn.loading .btn-text,
+        .btn.loading .btn-icon {
+            opacity: 0;
+        }
+
+        .btn .spinner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== FOOTER ===== */
+        .stock-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .stock-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .stock-footer i {
+            color: var(--accent-green);
+        }
+
+        /* ===== QUICK STATS ===== */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 16px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+        }
+
+        .stat-item:not(:last-child) {
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(39, 174, 96, 0.2);
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .stock-card {
+                padding: 40px 25px;
+                border-radius: 22px;
+            }
+
+            .header-icon {
+                width: 80px;
+                height: 80px;
+            }
+
+            .header-icon i {
+                font-size: 2.2rem;
+            }
+
+            .stock-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-input,
+            .form-select {
+                padding: 15px 16px 15px 48px;
+                font-size: 0.95rem;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stock-card {
+                padding: 35px 20px;
+            }
+
+            .header-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .header-icon i {
+                font-size: 1.9rem;
+            }
+
+            .stock-header h2 {
+                font-size: 1.35rem;
+            }
+
+            .form-input,
+            .form-select {
+                padding: 14px 14px 14px 44px;
+                font-size: 0.9rem;
+            }
+
+            .input-icon {
+                left: 14px;
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 16px 25px;
+                font-size: 0.95rem;
+            }
+
+            .blood-drop-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .blood-drop-icon span {
+                font-size: 1.1rem;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .stat-item {
+                border-right: none !important;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .stat-item:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading...</p>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="stock-container">
+        <!-- Back Button -->
+        <a href="provider-dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Dashboard</span>
+        </a>
+
+        <!-- Stock Card -->
+        <div class="stock-card">
+            <!-- Header -->
+            <div class="stock-header">
+                <div class="header-icon">
+                    <i class="fas fa-tint"></i>
+                    <div class="plus-badge">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <h2>Add / Update Blood Stock</h2>
+                <p>Manage your blood inventory</p>
+            </div>
+
+            <!-- Messages -->
+            <div class="message error" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Something went wrong.</span>
+            </div>
+
+            <div class="message success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Blood stock updated successfully!</span>
+            </div>
+
+            <div class="message info" id="infoMessage">
+                <i class="fas fa-info-circle"></i>
+                <span id="infoText">Existing blood group will be updated.</span>
+            </div>
+
+            <!-- Stock Form -->
+            <form class="stock-form" id="stockForm">
+                <!-- Hospital Name (Read-only) -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="label-icon"><i class="fas fa-hospital"></i></span>
+                        Hospital / Blood Bank Name
+                        <span class="readonly-badge">Auto-filled</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            class="form-input readonly" 
+                            id="hospitalName" 
+                            readonly
+                        >
+                        <i class="fas fa-hospital input-icon"></i>
+                        <i class="fas fa-lock lock-icon"></i>
+                    </div>
+                </div>
+
+                <!-- City (Read-only) -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="label-icon"><i class="fas fa-city"></i></span>
+                        City
+                        <span class="readonly-badge">Auto-filled</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            class="form-input readonly" 
+                            id="city" 
+                            readonly
+                        >
+                        <i class="fas fa-city input-icon"></i>
+                        <i class="fas fa-lock lock-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Blood Group -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="label-icon"><i class="fas fa-tint"></i></span>
+                        Blood Group
+                    </label>
+                    <div class="input-wrapper">
+                        <select class="form-select" id="bloodGroup" required>
+                            <option value="" disabled selected>Select Blood Group</option>
+                            <option value="A+">A+ (A Positive)</option>
+                            <option value="A-">A- (A Negative)</option>
+                            <option value="B+">B+ (B Positive)</option>
+                            <option value="B-">B- (B Negative)</option>
+                            <option value="AB+">AB+ (AB Positive)</option>
+                            <option value="AB-">AB- (AB Negative)</option>
+                            <option value="O+">O+ (O Positive)</option>
+                            <option value="O-">O- (O Negative)</option>
+                        </select>
+                        <i class="fas fa-tint input-icon"></i>
+                        <i class="fas fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <!-- Number of Units -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="label-icon"><i class="fas fa-boxes-stacked"></i></span>
+                        Number of Units
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="number" 
+                            class="form-input" 
+                            id="units" 
+                            placeholder="Enter number of units"
+                            min="0"
+                            max="9999"
+                            required
+                        >
+                        <i class="fas fa-cubes input-icon"></i>
+                        <div class="unit-controls">
+                            <button type="button" class="unit-btn" onclick="incrementUnits()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="unit-btn" onclick="decrementUnits()">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blood Group Preview -->
+                <div class="blood-group-preview" id="bloodPreview">
+                    <div class="blood-drop-icon">
+                        <span id="previewGroup">A+</span>
+                    </div>
+                    <div class="blood-info">
+                        <div class="group-name" id="previewGroupName">A Positive</div>
+                        <div class="units-count" id="previewUnits">0 units available</div>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
+                    <button type="submit" class="btn btn-submit" id="submitBtn">
+                        <i class="fas fa-plus-circle btn-icon"></i>
+                        <span class="btn-text">Add / Update Blood Stock</span>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <a href="provider-view-stock.html" class="btn btn-view-stock">
+                        <i class="fas fa-list"></i>
+                        <span>View My Blood Stock</span>
+                    </a>
+
+                    <a href="provider-dashboard.html" class="btn btn-dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Back to Dashboard</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats" id="quickStats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalGroups">0</div>
+                    <div class="stat-label">Blood Groups</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalUnits">0</div>
+                    <div class="stat-label">Total Units</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="lastUpdated">--</div>
+                    <div class="stat-label">Last Updated</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="stock-footer">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Stock data is securely stored and searchable by users
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let currentProvider = null;
+
+        // ===== DOM ELEMENTS =====
+        const loadingScreen = document.getElementById('loadingScreen');
+        const stockForm = document.getElementById('stockForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const infoMessage = document.getElementById('infoMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Form fields
+        const hospitalNameInput = document.getElementById('hospitalName');
+        const cityInput = document.getElementById('city');
+        const bloodGroupSelect = document.getElementById('bloodGroup');
+        const unitsInput = document.getElementById('units');
+
+        // Preview elements
+        const bloodPreview = document.getElementById('bloodPreview');
+        const previewGroup = document.getElementById('previewGroup');
+        const previewGroupName = document.getElementById('previewGroupName');
+        const previewUnits = document.getElementById('previewUnits');
+
+        // Blood group names mapping
+        const bloodGroupNames = {
+            'A+': 'A Positive',
+            'A-': 'A Negative',
+            'B+': 'B Positive',
+            'B-': 'B Negative',
+            'AB+': 'AB Positive',
+            'AB-': 'AB Negative',
+            'O+': 'O Positive',
+            'O-': 'O Negative'
+        };
+
+        // ===== CHECK AUTHENTICATION & LOAD DATA =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const loggedInProvider = localStorage.getItem('loggedInProvider');
+
+                // Check if logged in
+                if (!loggedInProvider) {
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Get provider data
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                currentProvider = providers.find(function(p) {
+                    return p.email.toLowerCase() === loggedInProvider.toLowerCase();
+                });
+
+                if (!currentProvider) {
+                    localStorage.removeItem('loggedInProvider');
+                    localStorage.removeItem('loggedInProviderId');
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Load provider info
+                loadProviderInfo();
+
+                // Update quick stats
+                updateQuickStats();
+
+                // Hide loading screen
+                loadingScreen.classList.add('hide');
+
+            }, 500);
+        });
+
+        // ===== LOAD PROVIDER INFO =====
+        function loadProviderInfo() {
+            hospitalNameInput.value = currentProvider.hospitalName || '';
+            cityInput.value = currentProvider.city || '';
+        }
+
+        // ===== UPDATE QUICK STATS =====
+        function updateQuickStats() {
+            const bloodStock = currentProvider.bloodStock || [];
+            
+            // Count blood groups with units > 0
+            const activeGroups = bloodStock.filter(s => parseInt(s.units) > 0).length;
+            document.getElementById('totalGroups').textContent = activeGroups;
+
+            // Calculate total units
+            let totalUnits = 0;
+            bloodStock.forEach(function(stock) {
+                totalUnits += parseInt(stock.units) || 0;
+            });
+            document.getElementById('totalUnits').textContent = totalUnits;
+
+            // Last updated
+            if (bloodStock.length > 0) {
+                const sortedStock = [...bloodStock].sort((a, b) => 
+                    new Date(b.updatedAt) - new Date(a.updatedAt)
+                );
+                const lastStock = sortedStock[0];
+                if (lastStock.updatedAt) {
+                    const date = new Date(lastStock.updatedAt);
+                    const now = new Date();
+                    const diffTime = Math.abs(now - date);
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays === 0) {
+                        document.getElementById('lastUpdated').textContent = 'Today';
+                    } else if (diffDays === 1) {
+                        document.getElementById('lastUpdated').textContent = 'Yesterday';
+                    } else if (diffDays < 7) {
+                        document.getElementById('lastUpdated').textContent = diffDays + 'd ago';
+                    } else {
+                        document.getElementById('lastUpdated').textContent = date.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                        });
+                    }
+                }
+            } else {
+                document.getElementById('lastUpdated').textContent = '--';
+            }
+        }
+
+        // ===== BLOOD GROUP CHANGE - SHOW PREVIEW =====
+        bloodGroupSelect.addEventListener('change', function() {
+            updatePreview();
+            checkExistingStock();
+        });
+
+        // ===== UNITS INPUT CHANGE =====
+        unitsInput.addEventListener('input', function() {
+            // Ensure only positive numbers
+            if (this.value < 0) this.value = 0;
+            if (this.value > 9999) this.value = 9999;
+            
+            updatePreview();
+        });
+
+        // ===== INCREMENT/DECREMENT UNITS =====
+        function incrementUnits() {
+            let currentValue = parseInt(unitsInput.value) || 0;
+            if (currentValue < 9999) {
+                unitsInput.value = currentValue + 1;
+                updatePreview();
+            }
+        }
+
+        function decrementUnits() {
+            let currentValue = parseInt(unitsInput.value) || 0;
+            if (currentValue > 0) {
+                unitsInput.value = currentValue - 1;
+                updatePreview();
+            }
+        }
+
+        // ===== UPDATE PREVIEW =====
+        function updatePreview() {
+            const group = bloodGroupSelect.value;
+            const units = parseInt(unitsInput.value) || 0;
+
+            if (group) {
+                bloodPreview.classList.add('show');
+                previewGroup.textContent = group;
+                previewGroupName.textContent = bloodGroupNames[group] || group;
+                previewUnits.textContent = units + ' unit' + (units !== 1 ? 's' : '') + ' available';
+            } else {
+                bloodPreview.classList.remove('show');
+            }
+        }
+
+        // ===== CHECK IF BLOOD GROUP EXISTS =====
+        function checkExistingStock() {
+            const group = bloodGroupSelect.value;
+            if (!group) return;
+
+            const bloodStock = currentProvider.bloodStock || [];
+            const existingStock = bloodStock.find(s => s.bloodGroup === group);
+
+            if (existingStock) {
+                infoMessage.classList.add('show');
+                document.getElementById('infoText').textContent = 
+                    `${group} already exists with ${existingStock.units} units. This will be updated.`;
+                unitsInput.value = existingStock.units;
+                updatePreview();
+            } else {
+                infoMessage.classList.remove('show');
+            }
+        }
+
+        // ===== FORM SUBMISSION =====
+        stockForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Reset messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validate
+            const bloodGroup = bloodGroupSelect.value;
+            const units = parseInt(unitsInput.value);
+
+            if (!bloodGroup) {
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = 'Please select a blood group.';
+                return;
+            }
+
+            if (isNaN(units) || units < 0) {
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = 'Please enter a valid number of units.';
+                return;
+            }
+
+            // Show loading
+            submitBtn.classList.add('loading');
+
+            // Process after delay
+            setTimeout(function() {
+                // Initialize bloodStock array if not exists
+                if (!currentProvider.bloodStock) {
+                    currentProvider.bloodStock = [];
+                }
+
+                // Check if blood group already exists
+                const existingIndex = currentProvider.bloodStock.findIndex(s => s.bloodGroup === bloodGroup);
+
+                const stockData = {
+                    bloodGroup: bloodGroup,
+                    units: units,
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (existingIndex !== -1) {
+                    // Update existing
+                    currentProvider.bloodStock[existingIndex] = stockData;
+                } else {
+                    // Add new
+                    currentProvider.bloodStock.push(stockData);
+                }
+
+                // Update in localStorage
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                const providerIndex = providers.findIndex(p => 
+                    p.email.toLowerCase() === currentProvider.email.toLowerCase()
+                );
+
+                if (providerIndex !== -1) {
+                    providers[providerIndex] = currentProvider;
+                    localStorage.setItem('bloodProviders', JSON.stringify(providers));
+                }
+
+                // Hide loading
+                submitBtn.classList.remove('loading');
+
+                // Show success
+                successMessage.classList.add('show');
+                infoMessage.classList.remove('show');
+                document.getElementById('successText').textContent = 
+                    existingIndex !== -1 
+                        ? `${bloodGroup} blood stock updated to ${units} units!` 
+                        : `${bloodGroup} blood stock added with ${units} units!`;
+
+                // Update quick stats
+                updateQuickStats();
+
+                // Reset form after delay
+                setTimeout(function() {
+                    bloodGroupSelect.value = '';
+                    unitsInput.value = '';
+                    bloodPreview.classList.remove('show');
+                }, 2000);
+
+            }, 800);
+        });
+
+        // ===== CONSOLE LOG =====
+        console.log('%c BloodAvail - Add/Update Blood Stock ', 'background: #27ae60; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

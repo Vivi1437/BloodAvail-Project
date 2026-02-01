@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-blue: #3498db;
+            --accent-blue-dark: #2980b9;
+            --accent-blue-light: rgba(52, 152, 219, 0.1);
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --light-blue: #f0f8ff;
+            --light-green: #f0fff4;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --border-color: #e8e8e8;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-blue: 0 8px 25px rgba(52, 152, 219, 0.3);
+            --shadow-green: 0 8px 25px rgba(39, 174, 96, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f8ff 0%, #ffffff 50%, #fff5f5 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.06) 0%, transparent 70%);
+            top: -120px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.04) 0%, transparent 70%);
+            top: 40%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+
+        .bg-circle:nth-child(4) {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.03) 0%, transparent 70%);
+            bottom: 20%;
+            right: 3%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(25px, -35px) scale(1.04); }
+            50% { transform: translate(-15px, 25px) scale(0.96); }
+            75% { transform: translate(20px, 12px) scale(1.02); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .profile-container {
+            position: relative;
+            z-index: 10;
+            max-width: 550px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TOP NAVIGATION ===== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 12px 24px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--accent-blue);
+            background: var(--light-blue);
+            border-color: rgba(52, 152, 219, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-red);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 2px solid var(--primary-red);
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* ===== PROFILE CARD ===== */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px 45px;
+            box-shadow: 
+                0 25px 60px rgba(52, 152, 219, 0.08),
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-dark), var(--accent-blue));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== PROFILE HEADER ===== */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px;
+            box-shadow: 0 10px 35px rgba(52, 152, 219, 0.35);
+            position: relative;
+            animation: avatarPulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 10px 35px rgba(52, 152, 219, 0.35); }
+            50% { box-shadow: 0 10px 50px rgba(52, 152, 219, 0.55); }
+        }
+
+        .profile-avatar i {
+            font-size: 3rem;
+            color: var(--white);
+        }
+
+        .profile-avatar .status-dot {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--success-green);
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.4);
+        }
+
+        .profile-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-header .user-name {
+            font-size: 1.15rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.12), rgba(52, 152, 219, 0.04));
+            border: 1px solid rgba(52, 152, 219, 0.25);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .profile-badge i {
+            font-size: 1rem;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.12), rgba(231, 76, 60, 0.04));
+            border: 1px solid rgba(231, 76, 60, 0.25);
+        }
+
+        .message.error i {
+            color: var(--error-red);
+            font-size: 1.3rem;
+        }
+
+        .message.error span {
+            color: var(--error-red);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.12), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.25);
+        }
+
+        .message.success i {
+            color: var(--success-green);
+            font-size: 1.3rem;
+        }
+
+        .message.success span {
+            color: var(--success-green);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== PROFILE FORM ===== */
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .form-section {
+            background: #fafafa;
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid #f0f0f0;
+            animation: sectionFadeIn 0.5s ease-out backwards;
+            animation-delay: 0.15s;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+        }
+
+        .section-icon i {
+            color: var(--white);
+            font-size: 1.1rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .section-header span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ===== FORM GROUP ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .readonly-badge {
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: #f0f0f0;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            font-size: 0.98rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.12);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--accent-blue);
+        }
+
+        /* Read-only state */
+        .form-input.readonly {
+            background: #f5f5f5;
+            color: var(--text-dark);
+            cursor: default;
+            border-color: #e0e0e0;
+        }
+
+        .form-input.readonly:focus {
+            border-color: #e0e0e0;
+            box-shadow: none;
+        }
+
+        /* Email always readonly */
+        .form-input.email-readonly {
+            background: #f0f0f0;
+            color: var(--text-light);
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        .form-input.email-readonly:focus {
+            border-color: #ddd;
+            box-shadow: none;
+        }
+
+        /* Email lock icon */
+        .email-lock {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 28px;
+            animation: sectionFadeIn 0.5s ease-out 0.25s backwards;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+        }
+
+        /* Edit Button */
+        .btn-edit {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            color: var(--white);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-edit i {
+            transition: var(--transition);
+        }
+
+        .btn-edit:hover i {
+            transform: rotate(15deg);
+        }
+
+        /* Save Button */
+        .btn-save {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: var(--white);
+            box-shadow: var(--shadow-green);
+            display: none;
+        }
+
+        .btn-save.show {
+            display: flex;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        /* Cancel Button */
+        .btn-cancel {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+            display: none;
+        }
+
+        .btn-cancel.show {
+            display: flex;
+        }
+
+        .btn-cancel:hover {
+            background: var(--light-red);
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        /* Search Button */
+        .btn-search {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-search:hover {
+            background: var(--light-blue);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-search i {
+            transition: var(--transition);
+        }
+
+        .btn-search:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* Loading State */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .btn.loading .btn-text,
+        .btn.loading .btn-icon {
+            opacity: 0;
+        }
+
+        .btn .spinner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== PROFILE STATS ===== */
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px dashed #e0e0e0;
+        }
+
+        .stat-item {
+            background: var(--white);
+            padding: 18px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--accent-blue-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .stat-icon i {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== PROFILE FOOTER ===== */
+        .profile-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .profile-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .profile-footer i {
+            color: var(--accent-blue);
+        }
+
+        .profile-footer .registered-date {
+            margin-top: 8px;
+            font-size: 0.75rem;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(52, 152, 219, 0.2);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .profile-card {
+                padding: 40px 25px;
+                border-radius: 22px;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .back-btn,
+            .logout-btn {
+                justify-content: center;
+            }
+
+            .profile-avatar {
+                width: 95px;
+                height: 95px;
+            }
+
+            .profile-avatar i {
+                font-size: 2.6rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-section {
+                padding: 22px 18px;
+            }
+
+            .section-header h3 {
+                font-size: 1rem;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-card {
+                padding: 35px 20px;
+            }
+
+            .profile-avatar {
+                width: 85px;
+                height: 85px;
+            }
+
+            .profile-avatar i {
+                font-size: 2.2rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.35rem;
+            }
+
+            .form-input {
+                padding: 14px 14px 14px 44px;
+                font-size: 0.92rem;
+            }
+
+            .input-icon {
+                left: 14px;
+                font-size: 0.95rem;
+            }
+
+            .section-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .btn {
+                padding: 14px 25px;
+                font-size: 0.95rem;
+            }
+
+            .profile-badge {
+                padding: 8px 18px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Profile...</p>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="profile-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <a href="search.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Search</span>
+            </a>
+            <button class="logout-btn" onclick="performLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <!-- Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                    <div class="status-dot"></div>
+                </div>
+                <h2>My Profile</h2>
+                <p class="user-name" id="displayName">Loading...</p>
+                <div class="profile-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Registered Blood Seeker</span>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="message error" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Something went wrong.</span>
+            </div>
+
+            <div class="message success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Profile updated successfully!</span>
+            </div>
+
+            <!-- Profile Form -->
+            <form class="profile-form" id="profileForm">
+                <!-- Personal Details Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div>
+                            <h3>Personal Information</h3>
+                            <span>Your account details</span>
+                        </div>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Full Name
+                            <span class="readonly-badge" id="nameBadge">Read Only</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                class="form-input readonly" 
+                                id="fullName" 
+                                name="fullName"
+                                readonly
+                            >
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Mobile Number
+                            <span class="readonly-badge" id="mobileBadge">Read Only</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="tel" 
+                                class="form-input readonly" 
+                                id="mobile" 
+                                name="mobile"
+                                maxlength="10"
+                                readonly
+                            >
+                            <i class="fas fa-phone input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Email (Always Read-only) -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email Address
+                            <span class="readonly-badge">Cannot be changed</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="email" 
+                                class="form-input email-readonly" 
+                                id="email" 
+                                name="email"
+                                readonly
+                            >
+                            <i class="fas fa-envelope input-icon"></i>
+                            <i class="fas fa-lock email-lock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
+                    <!-- Edit Button -->
+                    <button type="button" class="btn btn-edit" id="editBtn" onclick="enableEditing()">
+                        <i class="fas fa-edit btn-icon"></i>
+                        <span class="btn-text">Edit Profile</span>
+                    </button>
+
+                    <!-- Save Button -->
+                    <button type="submit" class="btn btn-save" id="saveBtn">
+                        <i class="fas fa-check btn-icon"></i>
+                        <span class="btn-text">Save Changes</span>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <!-- Cancel Button -->
+                    <button type="button" class="btn btn-cancel" id="cancelBtn" onclick="cancelEditing()">
+                        <i class="fas fa-times"></i>
+                        <span>Cancel</span>
+                    </button>
+
+                    <!-- Back to Search -->
+                    <a href="search.html" class="btn btn-search">
+                        <i class="fas fa-search"></i>
+                        <span>Back to Search</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Profile Stats -->
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-value" id="memberDays">--</div>
+                    <div class="stat-label">Days as Member</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-value">Active</div>
+                    <div class="stat-label">Account Status</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="profile-footer">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Your profile data is securely stored
+                </p>
+                <p class="registered-date" id="registeredDate">
+                    Member since: Loading...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let currentSeeker = null;
+        let originalData = {};
+        let isEditing = false;
+
+        // ===== DOM ELEMENTS =====
+        const loadingScreen = document.getElementById('loadingScreen');
+        const profileForm = document.getElementById('profileForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const editBtn = document.getElementById('editBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Form fields
+        const fullNameInput = document.getElementById('fullName');
+        const mobileInput = document.getElementById('mobile');
+        const emailInput = document.getElementById('email');
+
+        // ===== CHECK AUTHENTICATION & LOAD PROFILE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const loggedInSeeker = localStorage.getItem('loggedInSeeker');
+
+                // Check if logged in
+                if (!loggedInSeeker) {
+                    window.location.href = 'user-login.html';
+                    return;
+                }
+
+                // Get seeker data from bloodSeekers array
+                const seekers = JSON.parse(localStorage.getItem('bloodSeekers')) || [];
+                currentSeeker = seekers.find(function(s) {
+                    return s.email.toLowerCase() === loggedInSeeker.toLowerCase();
+                });
+
+                if (!currentSeeker) {
+                    // Seeker not found - clear session and redirect
+                    localStorage.removeItem('loggedInSeeker');
+                    localStorage.removeItem('loggedInSeekerId');
+                    window.location.href = 'user-login.html';
+                    return;
+                }
+
+                // Load profile data
+                loadProfileData();
+
+                // Hide loading screen
+                loadingScreen.classList.add('hide');
+
+            }, 600);
+        });
+
+        // ===== LOAD PROFILE DATA =====
+        function loadProfileData() {
+            // Fill form fields with seeker data
+            fullNameInput.value = currentSeeker.name || '';
+            mobileInput.value = currentSeeker.mobile || '';
+            emailInput.value = currentSeeker.email || '';
+
+            // Update display name
+            document.getElementById('displayName').textContent = currentSeeker.name || 'User';
+
+            // Update registered date
+            if (currentSeeker.registeredAt) {
+                const date = new Date(currentSeeker.registeredAt);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('registeredDate').textContent = 
+                    'Member since: ' + date.toLocaleDateString('en-US', options);
+
+                // Calculate days as member
+                const now = new Date();
+                const diffTime = Math.abs(now - date);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('memberDays').textContent = diffDays;
+            } else {
+                document.getElementById('memberDays').textContent = '1';
+            }
+
+            // Store original data for cancel functionality
+            storeOriginalData();
+        }
+
+        // ===== STORE ORIGINAL DATA =====
+        function storeOriginalData() {
+            originalData = {
+                name: fullNameInput.value,
+                mobile: mobileInput.value
+            };
+        }
+
+        // ===== ENABLE EDITING =====
+        function enableEditing() {
+            isEditing = true;
+
+            // Remove readonly from editable fields
+            fullNameInput.classList.remove('readonly');
+            fullNameInput.removeAttribute('readonly');
+
+            mobileInput.classList.remove('readonly');
+            mobileInput.removeAttribute('readonly');
+
+            // Update badges
+            document.getElementById('nameBadge').textContent = 'Editable';
+            document.getElementById('nameBadge').style.background = 'rgba(52, 152, 219, 0.15)';
+            document.getElementById('nameBadge').style.color = '#3498db';
+
+            document.getElementById('mobileBadge').textContent = 'Editable';
+            document.getElementById('mobileBadge').style.background = 'rgba(52, 152, 219, 0.15)';
+            document.getElementById('mobileBadge').style.color = '#3498db';
+
+            // Show save and cancel buttons, hide edit button
+            editBtn.style.display = 'none';
+            saveBtn.classList.add('show');
+            cancelBtn.classList.add('show');
+
+            // Focus on first editable field
+            fullNameInput.focus();
+
+            // Hide any existing messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // ===== CANCEL EDITING =====
+        function cancelEditing() {
+            isEditing = false;
+
+            // Restore original data
+            fullNameInput.value = originalData.name;
+            mobileInput.value = originalData.mobile;
+
+            // Add readonly back to fields
+            fullNameInput.classList.add('readonly');
+            fullNameInput.setAttribute('readonly', true);
+
+            mobileInput.classList.add('readonly');
+            mobileInput.setAttribute('readonly', true);
+
+            // Reset badges
+            document.getElementById('nameBadge').textContent = 'Read Only';
+            document.getElementById('nameBadge').style.background = '#f0f0f0';
+            document.getElementById('nameBadge').style.color = '#999';
+
+            document.getElementById('mobileBadge').textContent = 'Read Only';
+            document.getElementById('mobileBadge').style.background = '#f0f0f0';
+            document.getElementById('mobileBadge').style.color = '#999';
+
+            // Show edit button, hide save and cancel buttons
+            editBtn.style.display = 'flex';
+            saveBtn.classList.remove('show');
+            cancelBtn.classList.remove('show');
+
+            // Hide messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // ===== VALIDATE MOBILE =====
+        function validateMobile(mobile) {
+            return /^[6-9]\d{9}$/.test(mobile);
+        }
+
+        // ===== MOBILE INPUT - NUMBERS ONLY =====
+        mobileInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        // ===== FORM SUBMISSION =====
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!isEditing) return;
+
+            // Reset messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validate fields
+            let isValid = true;
+            let errorMsg = '';
+
+            if (!fullNameInput.value.trim() || fullNameInput.value.trim().length < 3) {
+                isValid = false;
+                errorMsg = 'Full name must be at least 3 characters.';
+            } else if (!validateMobile(mobileInput.value)) {
+                isValid = false;
+                errorMsg = 'Please enter a valid 10-digit mobile number.';
+            }
+
+            if (!isValid) {
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = errorMsg;
+                return;
+            }
+
+            // Show loading
+            saveBtn.classList.add('loading');
+
+            // Simulate save delay
+            setTimeout(function() {
+                // Update seeker data
+                currentSeeker.name = fullNameInput.value.trim();
+                currentSeeker.mobile = mobileInput.value.trim();
+                currentSeeker.updatedAt = new Date().toISOString();
+
+                // Update in localStorage
+                const seekers = JSON.parse(localStorage.getItem('bloodSeekers')) || [];
+                const seekerIndex = seekers.findIndex(function(s) {
+                    return s.email.toLowerCase() === currentSeeker.email.toLowerCase();
+                });
+
+                if (seekerIndex !== -1) {
+                    seekers[seekerIndex] = currentSeeker;
+                    localStorage.setItem('bloodSeekers', JSON.stringify(seekers));
+                }
+
+                // Update display name
+                document.getElementById('displayName').textContent = currentSeeker.name;
+
+                // Store new original data
+                storeOriginalData();
+
+                // Hide loading
+                saveBtn.classList.remove('loading');
+
+                // Show success message
+                successMessage.classList.add('show');
+                document.getElementById('successText').textContent = 'Profile updated successfully!';
+
+                // Switch back to read-only mode
+                cancelEditing();
+
+            }, 1000);
+        });
+
+        // ===== LOGOUT =====
+        function performLogout() {
+            // Clear logged-in seeker data
+            localStorage.removeItem('loggedInSeeker');
+            localStorage.removeItem('loggedInSeekerId');
+
+            // Redirect to login page
+            window.location.href = 'user-login.html';
+        }
+
+        // ===== CONSOLE LOG =====
+        console.log('%c BloodAvail - User Profile ', 'background: #3498db; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

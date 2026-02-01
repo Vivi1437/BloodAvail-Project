@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Registration – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --border-color: #e8e8e8;
+            --shadow: 0 10px 40px rgba(220, 53, 69, 0.15);
+            --shadow-green: 0 8px 25px rgba(39, 174, 96, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #ffe8e8 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.06) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.05) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            top: 40%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+
+        .bg-circle:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.04) 0%, transparent 70%);
+            bottom: 30%;
+            right: 3%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 30px) scale(0.95); }
+            75% { transform: translate(25px, 15px) scale(1.02); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .register-container {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            padding: 12px 24px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--primary-red);
+            background: var(--light-red);
+            border-color: rgba(220, 53, 69, 0.2);
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.15);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* ===== REGISTRATION CARD ===== */
+        .register-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px;
+            box-shadow: 
+                0 25px 60px rgba(220, 53, 69, 0.1),
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-green-dark), var(--accent-green));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== HEADER ===== */
+        .register-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+            animation: logoPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3); }
+            50% { box-shadow: 0 8px 35px rgba(220, 53, 69, 0.5); }
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 26px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .register-header h2 {
+            font-size: 1.7rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .register-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .provider-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            padding: 10px 22px;
+            border-radius: 50px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .provider-badge i {
+            font-size: 1rem;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(231, 76, 60, 0.05));
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .message.error i {
+            color: var(--error-red);
+        }
+
+        .message.error span {
+            color: var(--error-red);
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .message.success i {
+            color: var(--success-green);
+        }
+
+        .message.success span {
+            color: var(--success-green);
+        }
+
+        .message i {
+            font-size: 1.3rem;
+        }
+
+        .message span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== FORM SECTIONS ===== */
+        .form-section {
+            background: #fafafa;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid #f0f0f0;
+            animation: sectionFadeIn 0.6s ease-out backwards;
+        }
+
+        .form-section:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .form-section:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+
+        .section-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.25);
+        }
+
+        .section-icon i {
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.15rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .section-header span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ===== FORM GRID ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== FORM GROUP ===== */
+        .form-group {
+            position: relative;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--accent-green);
+        }
+
+        .form-input.error {
+            border-color: var(--error-red);
+        }
+
+        .form-input.success {
+            border-color: var(--success-green);
+        }
+
+        /* Floating Label */
+        .floating-label {
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: var(--transition);
+            background: transparent;
+            padding: 0 6px;
+        }
+
+        .form-input:focus ~ .floating-label,
+        .form-input:not(:placeholder-shown) ~ .floating-label {
+            top: 0;
+            left: 12px;
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            background: var(--white);
+            font-weight: 500;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: var(--accent-green);
+        }
+
+        /* Textarea */
+        .form-textarea {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-textarea:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1);
+        }
+
+        .form-textarea:focus ~ .input-icon {
+            color: var(--accent-green);
+        }
+
+        .textarea-wrapper .input-icon {
+            top: 20px;
+            transform: none;
+        }
+
+        .textarea-wrapper .floating-label {
+            top: 20px;
+            transform: none;
+        }
+
+        .form-textarea:focus ~ .floating-label,
+        .form-textarea:not(:placeholder-shown) ~ .floating-label {
+            top: -10px;
+            left: 12px;
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            background: var(--white);
+            font-weight: 500;
+        }
+
+        /* ===== CITY AUTOCOMPLETE ===== */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border: 2px solid var(--accent-green);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-list.show {
+            display: block;
+            animation: dropDown 0.3s ease-out;
+        }
+
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: var(--light-red);
+            color: var(--primary-red);
+        }
+
+        .autocomplete-item i {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .autocomplete-item:hover i {
+            color: var(--primary-red);
+        }
+
+        /* ===== INPUT FEEDBACK ===== */
+        .input-feedback {
+            font-size: 0.78rem;
+            margin-top: 6px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            padding-left: 5px;
+        }
+
+        .input-feedback.error {
+            color: var(--error-red);
+            display: flex;
+        }
+
+        .input-feedback.success {
+            color: var(--success-green);
+            display: flex;
+        }
+
+        /* ===== PASSWORD STRENGTH ===== */
+        .password-strength {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 33%;
+            background: var(--error-red);
+        }
+
+        .strength-fill.medium {
+            width: 66%;
+            background: var(--warning-orange);
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: var(--success-green);
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+            animation: sectionFadeIn 0.6s ease-out 0.6s backwards;
+        }
+
+        /* Register Button */
+        .register-btn {
+            width: 100%;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-green);
+        }
+
+        .register-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.6s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        .register-btn:hover::before {
+            left: 100%;
+        }
+
+        .register-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .register-btn i {
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .register-btn:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Loading State */
+        .register-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .register-btn.loading .btn-text,
+        .register-btn.loading i {
+            opacity: 0;
+        }
+
+        .register-btn .spinner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .register-btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Back Button */
+        .back-btn-bottom {
+            width: 100%;
+            padding: 16px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            background: var(--white);
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .back-btn-bottom i {
+            transition: var(--transition);
+        }
+
+        .back-btn-bottom:hover {
+            background: var(--light-red);
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .back-btn-bottom:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+        }
+
+        .divider span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ===== LOGIN LINK ===== */
+        .login-section {
+            text-align: center;
+        }
+
+        .login-text {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .login-link {
+            color: var(--accent-green);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .login-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-green);
+            transition: var(--transition);
+        }
+
+        .login-link:hover::after {
+            width: 100%;
+        }
+
+        .login-link:hover {
+            color: var(--primary-red);
+        }
+
+        .login-link:hover::after {
+            background: var(--primary-red);
+        }
+
+        /* ===== FOOTER ===== */
+        .register-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .register-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .register-footer i {
+            color: var(--accent-green);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .register-card {
+                padding: 35px 25px;
+                border-radius: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .register-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-section {
+                padding: 25px 20px;
+            }
+
+            .section-header h3 {
+                font-size: 1.05rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 30px 20px;
+            }
+
+            .logo {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .register-header h2 {
+                font-size: 1.35rem;
+            }
+
+            .form-input,
+            .form-textarea {
+                padding: 14px 14px 14px 42px;
+                font-size: 0.9rem;
+            }
+
+            .input-icon {
+                left: 14px;
+                font-size: 0.9rem;
+            }
+
+            .floating-label {
+                left: 42px;
+                font-size: 0.9rem;
+            }
+
+            .section-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .register-btn {
+                padding: 16px 25px;
+                font-size: 1rem;
+            }
+
+            .provider-badge {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="register-container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
+
+        <!-- Registration Card -->
+        <div class="register-card">
+            <!-- Header -->
+            <div class="register-header">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BloodAvail</h1>
+                        <span>Emergency Blood System</span>
+                    </div>
+                </a>
+                <h2>Create Provider Account</h2>
+                <p>Register your hospital or blood bank</p>
+                <div class="provider-badge">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Blood Provider Registration</span>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="message error" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Please fix the errors below.</span>
+            </div>
+
+            <div class="message success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Registration successful! Redirecting to login...</span>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="registerForm" novalidate>
+                <!-- Section 1: Contact Details -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-address-card"></i>
+                        </div>
+                        <div>
+                            <h3>Provider Contact Details</h3>
+                            <span>Enter your organization information</span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- Hospital Name -->
+                        <div class="form-group full-width">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input" 
+                                    id="hospitalName" 
+                                    name="hospitalName"
+                                    placeholder=" "
+                                    required
+                                >
+                                <i class="fas fa-hospital input-icon"></i>
+                                <label class="floating-label">Blood Bank / Hospital Name</label>
+                            </div>
+                            <div class="input-feedback" id="hospitalNameFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Hospital name is required</span>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="tel" 
+                                    class="form-input" 
+                                    id="mobile" 
+                                    name="mobile"
+                                    placeholder=" "
+                                    maxlength="10"
+                                    required
+                                >
+                                <i class="fas fa-phone input-icon"></i>
+                                <label class="floating-label">Mobile Number</label>
+                            </div>
+                            <div class="input-feedback" id="mobileFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Enter valid 10-digit number</span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="email" 
+                                    class="form-input" 
+                                    id="email" 
+                                    name="email"
+                                    placeholder=" "
+                                    required
+                                >
+                                <i class="fas fa-envelope input-icon"></i>
+                                <label class="floating-label">Email Address</label>
+                            </div>
+                            <div class="input-feedback" id="emailFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Enter valid email address</span>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    class="form-input" 
+                                    id="password" 
+                                    name="password"
+                                    placeholder=" "
+                                    required
+                                >
+                                <i class="fas fa-lock input-icon"></i>
+                                <label class="floating-label">Password</label>
+                                <button type="button" class="password-toggle" data-target="password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="passwordStrength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <span class="strength-text" id="strengthText">Password strength</span>
+                            </div>
+                            <div class="input-feedback" id="passwordFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Password must be at least 6 characters</span>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    class="form-input" 
+                                    id="confirmPassword" 
+                                    name="confirmPassword"
+                                    placeholder=" "
+                                    required
+                                >
+                                <i class="fas fa-lock input-icon"></i>
+                                <label class="floating-label">Confirm Password</label>
+                                <button type="button" class="password-toggle" data-target="confirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="input-feedback" id="confirmPasswordFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Passwords do not match</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Address Details -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Address Information</h3>
+                            <span>Enter your location details</span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- City with Autocomplete -->
+                        <div class="form-group">
+                            <div class="input-wrapper autocomplete-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input" 
+                                    id="city" 
+                                    name="city"
+                                    placeholder=" "
+                                    autocomplete="off"
+                                    required
+                                >
+                                <i class="fas fa-city input-icon"></i>
+                                <label class="floating-label">City</label>
+                                <div class="autocomplete-list" id="cityList"></div>
+                            </div>
+                            <div class="input-feedback" id="cityFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>City is required</span>
+                            </div>
+                        </div>
+
+                        <!-- Pincode -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input" 
+                                    id="pincode" 
+                                    name="pincode"
+                                    placeholder=" "
+                                    maxlength="6"
+                                    required
+                                >
+                                <i class="fas fa-map-pin input-icon"></i>
+                                <label class="floating-label">Pincode</label>
+                            </div>
+                            <div class="input-feedback" id="pincodeFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Enter valid 6-digit pincode</span>
+                            </div>
+                        </div>
+
+                        <!-- Full Address -->
+                        <div class="form-group full-width">
+                            <div class="input-wrapper textarea-wrapper">
+                                <textarea 
+                                    class="form-textarea" 
+                                    id="address" 
+                                    name="address"
+                                    placeholder=" "
+                                    rows="3"
+                                    required
+                                ></textarea>
+                                <i class="fas fa-location-dot input-icon"></i>
+                                <label class="floating-label">Full Address (Area, Street, Landmark)</label>
+                            </div>
+                            <div class="input-feedback" id="addressFeedback">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Full address is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
+                    <button type="submit" class="register-btn" id="registerBtn">
+                        <span class="btn-text">Register as Blood Provider</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <a href="index.html" class="back-btn-bottom">
+                        <i class="fas fa-home"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>Already have an account?</span>
+            </div>
+
+            <!-- Login Link -->
+            <div class="login-section">
+                <p class="login-text">
+                    Already registered? 
+                    <a href="provider-login.html" class="login-link">Login here</a>
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div class="register-footer">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Your data is securely stored
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== DOM ELEMENTS =====
+        const registerForm = document.getElementById('registerForm');
+        const registerBtn = document.getElementById('registerBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const scrollTopBtn = document.getElementById('scrollTop');
+
+        // Form fields
+        const hospitalName = document.getElementById('hospitalName');
+        const mobile = document.getElementById('mobile');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const city = document.getElementById('city');
+        const pincode = document.getElementById('pincode');
+        const address = document.getElementById('address');
+
+        // ===== CITIES LIST =====
+        const cities = [
+            'Hyderabad', 'Vijayawada', 'Visakhapatnam', 'Vizag', 'Guntur', 
+            'Tirupati', 'Warangal', 'Nellore', 'Kurnool', 'Rajahmundry',
+            'Kakinada', 'Kadapa', 'Anantapur', 'Eluru', 'Ongole',
+            'Bangalore', 'Bengaluru', 'Chennai', 'Mumbai', 'Delhi',
+            'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow',
+            'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal',
+            'Patna', 'Vadodara', 'Ghaziabad', 'Ludhiana', 'Agra',
+            'Nashik', 'Faridabad', 'Meerut', 'Rajkot', 'Varanasi',
+            'Srinagar', 'Aurangabad', 'Dhanbad', 'Amritsar', 'Allahabad',
+            'Ranchi', 'Coimbatore', 'Jabalpur', 'Gwalior', 'Vijayawada'
+        ];
+
+        // ===== CITY AUTOCOMPLETE =====
+        const cityInput = document.getElementById('city');
+        const cityList = document.getElementById('cityList');
+        let currentFocus = -1;
+
+        cityInput.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            cityList.innerHTML = '';
+            currentFocus = -1;
+
+            if (!value) {
+                cityList.classList.remove('show');
+                return;
+            }
+
+            const filteredCities = cities.filter(city => 
+                city.toLowerCase().startsWith(value)
+            ).slice(0, 6);
+
+            if (filteredCities.length > 0) {
+                filteredCities.forEach(cityName => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.innerHTML = `<i class="fas fa-map-marker-alt"></i><span>${cityName}</span>`;
+                    item.addEventListener('click', function() {
+                        cityInput.value = cityName;
+                        cityList.classList.remove('show');
+                        cityInput.classList.remove('error');
+                        cityInput.classList.add('success');
+                    });
+                    cityList.appendChild(item);
+                });
+                cityList.classList.add('show');
+            } else {
+                cityList.classList.remove('show');
+            }
+        });
+
+        // Keyboard navigation for autocomplete
+        cityInput.addEventListener('keydown', function(e) {
+            const items = cityList.querySelectorAll('.autocomplete-item');
+            if (!items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                currentFocus++;
+                if (currentFocus >= items.length) currentFocus = 0;
+                setActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                currentFocus--;
+                if (currentFocus < 0) currentFocus = items.length - 1;
+                setActive(items);
+            } else if (e.key === 'Enter' && currentFocus > -1) {
+                e.preventDefault();
+                items[currentFocus].click();
+            }
+        });
+
+        function setActive(items) {
+            items.forEach(item => item.classList.remove('active'));
+            if (currentFocus >= 0 && currentFocus < items.length) {
+                items[currentFocus].classList.add('active');
+            }
+        }
+
+        // Close autocomplete on click outside
+        document.addEventListener('click', function(e) {
+            if (!cityInput.contains(e.target) && !cityList.contains(e.target)) {
+                cityList.classList.remove('show');
+            }
+        });
+
+        // ===== PASSWORD TOGGLE =====
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        // ===== PASSWORD STRENGTH =====
+        password.addEventListener('input', function() {
+            const strengthDiv = document.getElementById('passwordStrength');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            const value = this.value;
+
+            if (value.length === 0) {
+                strengthDiv.classList.remove('show');
+                return;
+            }
+
+            strengthDiv.classList.add('show');
+
+            let strength = 0;
+            if (value.length >= 6) strength++;
+            if (value.length >= 8) strength++;
+            if (/[A-Z]/.test(value)) strength++;
+            if (/[0-9]/.test(value)) strength++;
+            if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+            strengthFill.className = 'strength-fill';
+            if (strength <= 2) {
+                strengthFill.classList.add('weak');
+                strengthText.textContent = 'Weak password';
+            } else if (strength <= 3) {
+                strengthFill.classList.add('medium');
+                strengthText.textContent = 'Medium strength';
+            } else {
+                strengthFill.classList.add('strong');
+                strengthText.textContent = 'Strong password';
+            }
+        });
+
+        // ===== VALIDATION FUNCTIONS =====
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validateMobile(mobile) {
+            return /^[6-9]\d{9}$/.test(mobile);
+        }
+
+        function validatePincode(pincode) {
+            return /^\d{6}$/.test(pincode);
+        }
+
+        function showError(input, feedbackId, message) {
+            input.classList.add('error');
+            input.classList.remove('success');
+            const feedback = document.getElementById(feedbackId);
+            feedback.querySelector('span').textContent = message;
+            feedback.classList.add('error');
+        }
+
+        function showSuccess(input, feedbackId) {
+            input.classList.remove('error');
+            input.classList.add('success');
+            document.getElementById(feedbackId).classList.remove('error');
+        }
+
+        function clearValidation(input, feedbackId) {
+            input.classList.remove('error', 'success');
+            document.getElementById(feedbackId).classList.remove('error');
+        }
+
+        // ===== REAL-TIME VALIDATION =====
+        hospitalName.addEventListener('blur', function() {
+            if (!this.value.trim()) {
+                showError(this, 'hospitalNameFeedback', 'Hospital/Blood Bank name is required');
+            } else if (this.value.trim().length < 3) {
+                showError(this, 'hospitalNameFeedback', 'Name must be at least 3 characters');
+            } else {
+                showSuccess(this, 'hospitalNameFeedback');
+            }
+        });
+
+        mobile.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        mobile.addEventListener('blur', function() {
+            if (!this.value) {
+                showError(this, 'mobileFeedback', 'Mobile number is required');
+            } else if (!validateMobile(this.value)) {
+                showError(this, 'mobileFeedback', 'Enter valid 10-digit mobile number');
+            } else {
+                showSuccess(this, 'mobileFeedback');
+            }
+        });
+
+        email.addEventListener('blur', function() {
+            if (!this.value) {
+                showError(this, 'emailFeedback', 'Email address is required');
+            } else if (!validateEmail(this.value)) {
+                showError(this, 'emailFeedback', 'Enter a valid email address');
+            } else {
+                showSuccess(this, 'emailFeedback');
+            }
+        });
+
+        password.addEventListener('blur', function() {
+            if (!this.value) {
+                showError(this, 'passwordFeedback', 'Password is required');
+            } else if (this.value.length < 6) {
+                showError(this, 'passwordFeedback', 'Password must be at least 6 characters');
+            } else {
+                showSuccess(this, 'passwordFeedback');
+            }
+        });
+
+        confirmPassword.addEventListener('blur', function() {
+            if (!this.value) {
+                showError(this, 'confirmPasswordFeedback', 'Please confirm your password');
+            } else if (this.value !== password.value) {
+                showError(this, 'confirmPasswordFeedback', 'Passwords do not match');
+            } else {
+                showSuccess(this, 'confirmPasswordFeedback');
+            }
+        });
+
+        confirmPassword.addEventListener('input', function() {
+            if (this.value && this.value === password.value) {
+                showSuccess(this, 'confirmPasswordFeedback');
+            }
+        });
+
+        city.addEventListener('blur', function() {
+            if (!this.value.trim()) {
+                showError(this, 'cityFeedback', 'City is required');
+            } else {
+                showSuccess(this, 'cityFeedback');
+            }
+        });
+
+        pincode.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 6);
+        });
+
+        pincode.addEventListener('blur', function() {
+            if (!this.value) {
+                showError(this, 'pincodeFeedback', 'Pincode is required');
+            } else if (!validatePincode(this.value)) {
+                showError(this, 'pincodeFeedback', 'Enter valid 6-digit pincode');
+            } else {
+                showSuccess(this, 'pincodeFeedback');
+            }
+        });
+
+        address.addEventListener('blur', function() {
+            if (!this.value.trim()) {
+                showError(this, 'addressFeedback', 'Full address is required');
+            } else if (this.value.trim().length < 10) {
+                showError(this, 'addressFeedback', 'Please enter complete address');
+            } else {
+                showSuccess(this, 'addressFeedback');
+            }
+        });
+
+        // ===== FORM SUBMISSION =====
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validate all fields
+            if (!hospitalName.value.trim() || hospitalName.value.trim().length < 3) {
+                showError(hospitalName, 'hospitalNameFeedback', 'Hospital/Blood Bank name is required (min 3 chars)');
+                isValid = false;
+            }
+
+            if (!validateMobile(mobile.value)) {
+                showError(mobile, 'mobileFeedback', 'Enter valid 10-digit mobile number');
+                isValid = false;
+            }
+
+            if (!validateEmail(email.value)) {
+                showError(email, 'emailFeedback', 'Enter a valid email address');
+                isValid = false;
+            }
+
+            if (password.value.length < 6) {
+                showError(password, 'passwordFeedback', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+
+            if (confirmPassword.value !== password.value) {
+                showError(confirmPassword, 'confirmPasswordFeedback', 'Passwords do not match');
+                isValid = false;
+            }
+
+            if (!city.value.trim()) {
+                showError(city, 'cityFeedback', 'City is required');
+                isValid = false;
+            }
+
+            if (!validatePincode(pincode.value)) {
+                showError(pincode, 'pincodeFeedback', 'Enter valid 6-digit pincode');
+                isValid = false;
+            }
+
+            if (!address.value.trim() || address.value.trim().length < 10) {
+                showError(address, 'addressFeedback', 'Please enter complete address');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = 'Please fix the errors in the form.';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Check if email already exists
+            const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+            const emailExists = providers.some(p => p.email.toLowerCase() === email.value.toLowerCase());
+
+            if (emailExists) {
+                showError(email, 'emailFeedback', 'This email is already registered');
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = 'An account with this email already exists.';
+                return;
+            }
+
+            // Show loading
+            registerBtn.classList.add('loading');
+
+            // Simulate processing
+            setTimeout(() => {
+                // Create provider object
+                const providerData = {
+                    id: Date.now(),
+                    hospitalName: hospitalName.value.trim(),
+                    mobile: mobile.value,
+                    email: email.value.toLowerCase(),
+                    password: password.value,
+                    city: city.value.trim(),
+                    pincode: pincode.value,
+                    address: address.value.trim(),
+                    registeredAt: new Date().toISOString(),
+                    bloodStock: []
+                };
+
+                // Save to localStorage
+                providers.push(providerData);
+                localStorage.setItem('bloodProviders', JSON.stringify(providers));
+
+                // Show success
+                registerBtn.classList.remove('loading');
+                successMessage.classList.add('show');
+                document.getElementById('successText').textContent = 'Registration successful! Redirecting to login...';
+
+                // Clear form
+                registerForm.reset();
+                document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+                    input.classList.remove('success', 'error');
+                });
+                document.getElementById('passwordStrength').classList.remove('show');
+
+                // Redirect to login after delay
+                setTimeout(() => {
+                    window.location.href = 'provider-login.html';
+                }, 2000);
+
+            }, 1500);
+        });
+
+        // ===== SCROLL TO TOP =====
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== PREVENT FORM RESUBMISSION =====
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        // Console log
+        console.log('%c BloodAvail - Provider Registration ', 'background: #27ae60; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --accent-blue: #3498db;
+            --accent-blue-dark: #2980b9;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --border-color: #e8e8e8;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.15);
+            --shadow-green: 0 8px 25px rgba(39, 174, 96, 0.3);
+            --shadow-blue: 0 8px 25px rgba(52, 152, 219, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #fff5f5 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.06) 0%, transparent 70%);
+            top: -120px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.05) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            top: 40%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+
+        .bg-circle:nth-child(4) {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.04) 0%, transparent 70%);
+            bottom: 20%;
+            right: 3%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(25px, -35px) scale(1.04); }
+            50% { transform: translate(-15px, 25px) scale(0.96); }
+            75% { transform: translate(20px, 12px) scale(1.02); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .profile-container {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TOP NAVIGATION ===== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 12px 24px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--accent-blue);
+            background: rgba(52, 152, 219, 0.08);
+            border-color: rgba(52, 152, 219, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-red);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 2px solid var(--primary-red);
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* ===== PROFILE CARD ===== */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px 45px;
+            box-shadow: 
+                0 25px 60px rgba(52, 152, 219, 0.08),
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-dark), var(--accent-blue));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== PROFILE HEADER ===== */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+            position: relative;
+            animation: avatarPulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3); }
+            50% { box-shadow: 0 10px 45px rgba(52, 152, 219, 0.5); }
+        }
+
+        .profile-avatar i {
+            font-size: 2.8rem;
+            color: var(--white);
+        }
+
+        .profile-avatar .status-dot {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: var(--success-green);
+            border-radius: 50%;
+            border: 3px solid var(--white);
+        }
+
+        .profile-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-header .provider-name {
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.12), rgba(52, 152, 219, 0.04));
+            border: 1px solid rgba(52, 152, 219, 0.25);
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .profile-badge i {
+            font-size: 1rem;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.12), rgba(231, 76, 60, 0.04));
+            border: 1px solid rgba(231, 76, 60, 0.25);
+        }
+
+        .message.error i {
+            color: var(--error-red);
+            font-size: 1.3rem;
+        }
+
+        .message.error span {
+            color: var(--error-red);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.12), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.25);
+        }
+
+        .message.success i {
+            color: var(--success-green);
+            font-size: 1.3rem;
+        }
+
+        .message.success span {
+            color: var(--success-green);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== PROFILE FORM ===== */
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-section {
+            background: #fafafa;
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid #f0f0f0;
+            animation: sectionFadeIn 0.5s ease-out backwards;
+        }
+
+        .form-section:nth-child(1) { animation-delay: 0.1s; }
+        .form-section:nth-child(2) { animation-delay: 0.2s; }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+        }
+
+        .section-icon i {
+            color: var(--white);
+            font-size: 1.1rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .section-header span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ===== FORM GRID ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== FORM GROUP ===== */
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 16px 15px 46px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.12);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--accent-blue);
+        }
+
+        /* Read-only state */
+        .form-input.readonly {
+            background: #f5f5f5;
+            color: var(--text-dark);
+            cursor: default;
+            border-color: #e0e0e0;
+        }
+
+        .form-input.readonly:focus {
+            border-color: #e0e0e0;
+            box-shadow: none;
+        }
+
+        /* Email always readonly */
+        .form-input.email-readonly {
+            background: #f0f0f0;
+            color: var(--text-light);
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        .form-input.email-readonly:focus {
+            border-color: #ddd;
+            box-shadow: none;
+        }
+
+        /* Textarea */
+        .form-textarea {
+            width: 100%;
+            padding: 15px 16px 15px 46px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .form-textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.12);
+        }
+
+        .form-textarea.readonly {
+            background: #f5f5f5;
+            color: var(--text-dark);
+            cursor: default;
+            border-color: #e0e0e0;
+            resize: none;
+        }
+
+        .textarea-wrapper .input-icon {
+            top: 20px;
+            transform: none;
+        }
+
+        /* Email lock icon */
+        .email-lock {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+            animation: sectionFadeIn 0.5s ease-out 0.3s backwards;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+        }
+
+        /* Edit Button */
+        .btn-edit {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            color: var(--white);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-edit i {
+            transition: var(--transition);
+        }
+
+        .btn-edit:hover i {
+            transform: rotate(15deg);
+        }
+
+        /* Save Button */
+        .btn-save {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: var(--white);
+            box-shadow: var(--shadow-green);
+            display: none;
+        }
+
+        .btn-save.show {
+            display: flex;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        /* Cancel Button */
+        .btn-cancel {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+            display: none;
+        }
+
+        .btn-cancel.show {
+            display: flex;
+        }
+
+        .btn-cancel:hover {
+            background: var(--light-red);
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        /* Dashboard Button */
+        .btn-dashboard {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-dashboard:hover {
+            background: rgba(52, 152, 219, 0.08);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-dashboard i {
+            transition: var(--transition);
+        }
+
+        .btn-dashboard:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* Loading State */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .btn.loading .btn-text,
+        .btn.loading .btn-icon {
+            opacity: 0;
+        }
+
+        .btn .spinner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== PROFILE FOOTER ===== */
+        .profile-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .profile-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .profile-footer i {
+            color: var(--accent-blue);
+        }
+
+        .profile-footer .registered-date {
+            margin-top: 8px;
+            font-size: 0.75rem;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(52, 152, 219, 0.2);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .profile-card {
+                padding: 40px 25px;
+                border-radius: 22px;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .back-btn,
+            .logout-btn {
+                justify-content: center;
+            }
+
+            .profile-avatar {
+                width: 85px;
+                height: 85px;
+            }
+
+            .profile-avatar i {
+                font-size: 2.3rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section {
+                padding: 22px 18px;
+            }
+
+            .section-header h3 {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-card {
+                padding: 35px 20px;
+            }
+
+            .profile-avatar {
+                width: 75px;
+                height: 75px;
+            }
+
+            .profile-avatar i {
+                font-size: 2rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .form-input,
+            .form-textarea {
+                padding: 13px 14px 13px 42px;
+                font-size: 0.9rem;
+            }
+
+            .input-icon {
+                left: 14px;
+                font-size: 0.95rem;
+            }
+
+            .btn {
+                padding: 14px 25px;
+                font-size: 0.95rem;
+            }
+
+            .profile-badge {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Profile...</p>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="profile-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <a href="provider-dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+            <button class="logout-btn" onclick="performLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <!-- Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-hospital-alt"></i>
+                    <div class="status-dot"></div>
+                </div>
+                <h2>My Profile</h2>
+                <p class="provider-name" id="displayName">Loading...</p>
+                <div class="profile-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Verified Blood Provider</span>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="message error" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Something went wrong.</span>
+            </div>
+
+            <div class="message success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Profile updated successfully!</span>
+            </div>
+
+            <!-- Profile Form -->
+            <form class="profile-form" id="profileForm">
+                <!-- Section 1: Contact Details -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-address-card"></i>
+                        </div>
+                        <div>
+                            <h3>Contact Details</h3>
+                            <span>Your organization information</span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- Hospital Name -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Blood Bank / Hospital Name</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input readonly" 
+                                    id="hospitalName" 
+                                    name="hospitalName"
+                                    readonly
+                                >
+                                <i class="fas fa-hospital input-icon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="tel" 
+                                    class="form-input readonly" 
+                                    id="mobile" 
+                                    name="mobile"
+                                    maxlength="10"
+                                    readonly
+                                >
+                                <i class="fas fa-phone input-icon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Email (Always Read-only) -->
+                        <div class="form-group">
+                            <label class="form-label">Email Address <small>(Cannot be changed)</small></label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="email" 
+                                    class="form-input email-readonly" 
+                                    id="email" 
+                                    name="email"
+                                    readonly
+                                >
+                                <i class="fas fa-envelope input-icon"></i>
+                                <i class="fas fa-lock email-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Address Details -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Address Information</h3>
+                            <span>Your location details</span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- City -->
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input readonly" 
+                                    id="city" 
+                                    name="city"
+                                    readonly
+                                >
+                                <i class="fas fa-city input-icon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Pincode -->
+                        <div class="form-group">
+                            <label class="form-label">Pincode</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input readonly" 
+                                    id="pincode" 
+                                    name="pincode"
+                                    maxlength="6"
+                                    readonly
+                                >
+                                <i class="fas fa-map-pin input-icon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Full Address -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Full Address</label>
+                            <div class="input-wrapper textarea-wrapper">
+                                <textarea 
+                                    class="form-textarea readonly" 
+                                    id="address" 
+                                    name="address"
+                                    rows="3"
+                                    readonly
+                                ></textarea>
+                                <i class="fas fa-location-dot input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
+                    <!-- Edit Button -->
+                    <button type="button" class="btn btn-edit" id="editBtn" onclick="enableEditing()">
+                        <i class="fas fa-edit btn-icon"></i>
+                        <span class="btn-text">Edit Profile</span>
+                    </button>
+
+                    <!-- Save Button -->
+                    <button type="submit" class="btn btn-save" id="saveBtn">
+                        <i class="fas fa-check btn-icon"></i>
+                        <span class="btn-text">Save Changes</span>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <!-- Cancel Button -->
+                    <button type="button" class="btn btn-cancel" id="cancelBtn" onclick="cancelEditing()">
+                        <i class="fas fa-times"></i>
+                        <span>Cancel</span>
+                    </button>
+
+                    <!-- Back to Dashboard -->
+                    <a href="provider-dashboard.html" class="btn btn-dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Back to Dashboard</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Footer -->
+            <div class="profile-footer">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Your profile data is securely stored
+                </p>
+                <p class="registered-date" id="registeredDate">
+                    Member since: Loading...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let currentProvider = null;
+        let originalData = {};
+        let isEditing = false;
+
+        // ===== DOM ELEMENTS =====
+        const loadingScreen = document.getElementById('loadingScreen');
+        const profileForm = document.getElementById('profileForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const editBtn = document.getElementById('editBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Form fields
+        const hospitalNameInput = document.getElementById('hospitalName');
+        const mobileInput = document.getElementById('mobile');
+        const emailInput = document.getElementById('email');
+        const cityInput = document.getElementById('city');
+        const pincodeInput = document.getElementById('pincode');
+        const addressInput = document.getElementById('address');
+
+        // ===== CHECK AUTHENTICATION & LOAD PROFILE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const loggedInProvider = localStorage.getItem('loggedInProvider');
+
+                // Check if logged in
+                if (!loggedInProvider) {
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Get provider data from bloodProviders array
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                currentProvider = providers.find(function(p) {
+                    return p.email.toLowerCase() === loggedInProvider.toLowerCase();
+                });
+
+                if (!currentProvider) {
+                    // Provider not found - clear session and redirect
+                    localStorage.removeItem('loggedInProvider');
+                    localStorage.removeItem('loggedInProviderId');
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Load profile data
+                loadProfileData();
+
+                // Hide loading screen
+                loadingScreen.classList.add('hide');
+
+            }, 600);
+        });
+
+        // ===== LOAD PROFILE DATA =====
+        function loadProfileData() {
+            // Fill form fields with provider data
+            hospitalNameInput.value = currentProvider.hospitalName || '';
+            mobileInput.value = currentProvider.mobile || '';
+            emailInput.value = currentProvider.email || '';
+            cityInput.value = currentProvider.city || '';
+            pincodeInput.value = currentProvider.pincode || '';
+            addressInput.value = currentProvider.address || '';
+
+            // Update display name
+            document.getElementById('displayName').textContent = currentProvider.hospitalName || 'Provider';
+
+            // Update registered date
+            if (currentProvider.registeredAt) {
+                const date = new Date(currentProvider.registeredAt);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('registeredDate').textContent = 
+                    'Member since: ' + date.toLocaleDateString('en-US', options);
+            }
+
+            // Store original data for cancel functionality
+            storeOriginalData();
+        }
+
+        // ===== STORE ORIGINAL DATA =====
+        function storeOriginalData() {
+            originalData = {
+                hospitalName: hospitalNameInput.value,
+                mobile: mobileInput.value,
+                city: cityInput.value,
+                pincode: pincodeInput.value,
+                address: addressInput.value
+            };
+        }
+
+        // ===== ENABLE EDITING =====
+        function enableEditing() {
+            isEditing = true;
+
+            // Remove readonly from editable fields
+            hospitalNameInput.classList.remove('readonly');
+            hospitalNameInput.removeAttribute('readonly');
+
+            mobileInput.classList.remove('readonly');
+            mobileInput.removeAttribute('readonly');
+
+            cityInput.classList.remove('readonly');
+            cityInput.removeAttribute('readonly');
+
+            pincodeInput.classList.remove('readonly');
+            pincodeInput.removeAttribute('readonly');
+
+            addressInput.classList.remove('readonly');
+            addressInput.removeAttribute('readonly');
+
+            // Show save and cancel buttons, hide edit button
+            editBtn.style.display = 'none';
+            saveBtn.classList.add('show');
+            cancelBtn.classList.add('show');
+
+            // Focus on first editable field
+            hospitalNameInput.focus();
+
+            // Hide any existing messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // ===== CANCEL EDITING =====
+        function cancelEditing() {
+            isEditing = false;
+
+            // Restore original data
+            hospitalNameInput.value = originalData.hospitalName;
+            mobileInput.value = originalData.mobile;
+            cityInput.value = originalData.city;
+            pincodeInput.value = originalData.pincode;
+            addressInput.value = originalData.address;
+
+            // Add readonly back to fields
+            hospitalNameInput.classList.add('readonly');
+            hospitalNameInput.setAttribute('readonly', true);
+
+            mobileInput.classList.add('readonly');
+            mobileInput.setAttribute('readonly', true);
+
+            cityInput.classList.add('readonly');
+            cityInput.setAttribute('readonly', true);
+
+            pincodeInput.classList.add('readonly');
+            pincodeInput.setAttribute('readonly', true);
+
+            addressInput.classList.add('readonly');
+            addressInput.setAttribute('readonly', true);
+
+            // Show edit button, hide save and cancel buttons
+            editBtn.style.display = 'flex';
+            saveBtn.classList.remove('show');
+            cancelBtn.classList.remove('show');
+
+            // Hide messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // ===== VALIDATE MOBILE =====
+        function validateMobile(mobile) {
+            return /^[6-9]\d{9}$/.test(mobile);
+        }
+
+        // ===== VALIDATE PINCODE =====
+        function validatePincode(pincode) {
+            return /^\d{6}$/.test(pincode);
+        }
+
+        // ===== FORM SUBMISSION =====
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!isEditing) return;
+
+            // Reset messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validate fields
+            let isValid = true;
+            let errorMsg = '';
+
+            if (!hospitalNameInput.value.trim() || hospitalNameInput.value.trim().length < 3) {
+                isValid = false;
+                errorMsg = 'Hospital name must be at least 3 characters.';
+            } else if (!validateMobile(mobileInput.value)) {
+                isValid = false;
+                errorMsg = 'Please enter a valid 10-digit mobile number.';
+            } else if (!cityInput.value.trim()) {
+                isValid = false;
+                errorMsg = 'City is required.';
+            } else if (!validatePincode(pincodeInput.value)) {
+                isValid = false;
+                errorMsg = 'Please enter a valid 6-digit pincode.';
+            } else if (!addressInput.value.trim() || addressInput.value.trim().length < 10) {
+                isValid = false;
+                errorMsg = 'Please enter a complete address (at least 10 characters).';
+            }
+
+            if (!isValid) {
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = errorMsg;
+                return;
+            }
+
+            // Show loading
+            saveBtn.classList.add('loading');
+
+            // Simulate save delay
+            setTimeout(function() {
+                // Update provider data
+                currentProvider.hospitalName = hospitalNameInput.value.trim();
+                currentProvider.mobile = mobileInput.value.trim();
+                currentProvider.city = cityInput.value.trim();
+                currentProvider.pincode = pincodeInput.value.trim();
+                currentProvider.address = addressInput.value.trim();
+                currentProvider.updatedAt = new Date().toISOString();
+
+                // Update in localStorage
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                const providerIndex = providers.findIndex(function(p) {
+                    return p.email.toLowerCase() === currentProvider.email.toLowerCase();
+                });
+
+                if (providerIndex !== -1) {
+                    providers[providerIndex] = currentProvider;
+                    localStorage.setItem('bloodProviders', JSON.stringify(providers));
+                }
+
+                // Update display name
+                document.getElementById('displayName').textContent = currentProvider.hospitalName;
+
+                // Store new original data
+                storeOriginalData();
+
+                // Hide loading
+                saveBtn.classList.remove('loading');
+
+                // Show success message
+                successMessage.classList.add('show');
+                document.getElementById('successText').textContent = 'Profile updated successfully!';
+
+                // Switch back to read-only mode
+                cancelEditing();
+
+            }, 1000);
+        });
+
+        // ===== MOBILE INPUT - NUMBERS ONLY =====
+        mobileInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        // ===== PINCODE INPUT - NUMBERS ONLY =====
+        pincodeInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 6);
+        });
+
+        // ===== LOGOUT =====
+        function performLogout() {
+            // Clear logged-in provider data
+            localStorage.removeItem('loggedInProvider');
+            localStorage.removeItem('loggedInProviderId');
+
+            // Redirect to login page
+            window.location.href = 'provider-login.html';
+        }
+
+        // ===== CONSOLE LOG =====
+        console.log('%c BloodAvail - Provider Profile ', 'background: #3498db; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

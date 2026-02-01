@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-blue: #3498db;
+            --accent-blue-dark: #2980b9;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --light-blue: #f0f8ff;
+            --light-green: #f0fff4;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --border-color: #e8e8e8;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-red: 0 8px 25px rgba(220, 53, 69, 0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #fff5f5 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.05) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.04) 0%, transparent 70%);
+            top: 50%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 30px) scale(0.95); }
+            75% { transform: translate(25px, 15px) scale(1.02); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background: var(--light-blue);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-3px);
+        }
+
+        .new-search-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+            transition: var(--transition);
+        }
+
+        .new-search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        /* ===== RESULT HEADER ===== */
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-summary {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--white);
+            padding: 20px 35px;
+            border-radius: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary-icon.blood {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+        }
+
+        .summary-icon.city {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+        }
+
+        .summary-icon i {
+            color: var(--white);
+            font-size: 1.1rem;
+        }
+
+        .summary-text {
+            text-align: left;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .summary-divider {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(180deg, transparent, #e0e0e0, transparent);
+        }
+
+        .result-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .result-header h2 span {
+            color: var(--accent-green);
+        }
+
+        .result-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* ===== RESULT STATS ===== */
+        .result-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease-out 0.1s backwards;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+        }
+
+        .stat-badge i {
+            font-size: 1.1rem;
+        }
+
+        .stat-badge.providers i {
+            color: var(--accent-blue);
+        }
+
+        .stat-badge.units i {
+            color: var(--accent-green);
+        }
+
+        .stat-badge span {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .stat-badge strong {
+            color: var(--text-dark);
+        }
+
+        /* ===== RESULT GRID ===== */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* ===== RESULT CARD ===== */
+        .result-card {
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+            animation: cardFadeIn 0.5s ease-out backwards;
+        }
+
+        .result-card:nth-child(1) { animation-delay: 0.1s; }
+        .result-card:nth-child(2) { animation-delay: 0.15s; }
+        .result-card:nth-child(3) { animation-delay: 0.2s; }
+        .result-card:nth-child(4) { animation-delay: 0.25s; }
+        .result-card:nth-child(5) { animation-delay: 0.3s; }
+        .result-card:nth-child(6) { animation-delay: 0.35s; }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent-green);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .hospital-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .hospital-icon i {
+            font-size: 1.6rem;
+            color: var(--white);
+        }
+
+        .hospital-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hospital-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .hospital-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--white);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Blood Group & Units Row */
+        .blood-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.08), rgba(220, 53, 69, 0.02));
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .blood-group-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .blood-drop {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .blood-drop span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .blood-details .blood-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .blood-details .blood-type {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        .units-display {
+            text-align: right;
+        }
+
+        .units-display .units-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .units-display .units-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            line-height: 1;
+        }
+
+        .units-display .units-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Address Section */
+        .address-section {
+            border-top: 1px dashed #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .address-section h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .address-section h4 i {
+            color: var(--accent-blue);
+        }
+
+        .address-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .address-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .address-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .address-icon i {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .address-text {
+            flex: 1;
+        }
+
+        .address-text .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .address-text .value {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .address-text .value.phone {
+            color: var(--accent-blue);
+        }
+
+        /* Card Footer */
+        .card-footer {
+            padding: 15px 25px;
+            background: #fafafa;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .updated-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .updated-time i {
+            color: var(--accent-green);
+        }
+
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(39, 174, 96, 0.05));
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        .availability-badge i {
+            font-size: 0.7rem;
+        }
+
+        /* ===== NO RESULTS ===== */
+        .no-results {
+            text-align: center;
+            padding: 80px 30px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .no-results-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.03));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .no-results-icon i {
+            font-size: 3rem;
+            color: var(--primary-red);
+        }
+
+        .no-results h3 {
+            font-size: 1.6rem;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .no-results p {
+            font-size: 1rem;
+            color: var(--text-light);
+            max-width: 450px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+
+        .no-results .search-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: var(--shadow-red);
+            transition: var(--transition);
+        }
+
+        .no-results .search-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(220, 53, 69, 0.35);
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 35px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            box-shadow: var(--shadow-red);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(220, 53, 69, 0.35);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-blue);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* ===== FOOTER ===== */
+        .result-footer {
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        .result-footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .result-footer i {
+            color: var(--primary-red);
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 55px;
+            height: 55px;
+            border: 4px solid rgba(39, 174, 96, 0.15);
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 30px 15px 60px;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-summary {
+                padding: 15px 25px;
+                gap: 15px;
+            }
+
+            .summary-divider {
+                display: none;
+            }
+
+            .result-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blood-info-row {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .blood-group-display {
+                justify-content: center;
+            }
+
+            .units-display {
+                text-align: center;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .back-btn span,
+            .new-search-btn span {
+                display: none;
+            }
+
+            .back-btn,
+            .new-search-btn {
+                padding: 10px 12px;
+            }
+
+            .search-summary {
+                flex-direction: column;
+            }
+
+            .result-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .card-header {
+                padding: 20px;
+            }
+
+            .hospital-name {
+                font-size: 1.05rem;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            .blood-drop {
+                width: 48px;
+                height: 48px;
+            }
+
+            .blood-drop span {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Results...</p>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>BloodAvail</h1>
+                    <span>Emergency Blood System</span>
+                </div>
+            </a>
+
+            <div class="header-actions">
+                <a href="search.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Search</span>
+                </a>
+                <a href="search.html" class="new-search-btn">
+                    <i class="fas fa-search"></i>
+                    <span>New Search</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Result Header -->
+        <div class="result-header">
+            <div class="search-summary">
+                <div class="summary-item">
+                    <div class="summary-icon blood">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="summary-text">
+                        <div class="summary-label">Blood Group</div>
+                        <div class="summary-value" id="searchBloodGroup">--</div>
+                    </div>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-item">
+                    <div class="summary-icon city">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="summary-text">
+                        <div class="summary-label">City</div>
+                        <div class="summary-value" id="searchCity">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Search <span>Results</span></h2>
+            <p>Blood availability from registered providers</p>
+        </div>
+
+        <!-- Result Stats -->
+        <div class="result-stats" id="resultStats">
+            <div class="stat-badge providers">
+                <i class="fas fa-hospital"></i>
+                <span><strong id="providerCount">0</strong> Provider(s) Found</span>
+            </div>
+            <div class="stat-badge units">
+                <i class="fas fa-tint"></i>
+                <span><strong id="totalUnits">0</strong> Total Units Available</span>
+            </div>
+        </div>
+
+        <!-- Result Grid -->
+        <div class="result-grid" id="resultGrid">
+            <!-- Cards will be dynamically inserted here -->
+        </div>
+
+        <!-- No Results -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>No Blood Units Found</h3>
+            <p>Sorry, no blood units are currently available for the selected blood group and city. Please try searching for a different blood group or city.</p>
+            <a href="search.html" class="search-btn">
+                <i class="fas fa-search"></i>
+                <span>Try Another Search</span>
+            </a>
+        </div>
+
+        <!-- Button Group -->
+        <div class="button-group" id="buttonGroup">
+            <a href="search.html" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+                <span>Search Again</span>
+            </a>
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="result-footer">
+        <p>
+            <i class="fas fa-heart"></i>
+            BloodAvail – Connecting blood seekers with providers
+        </p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let searchCity = '';
+        let searchBloodGroup = '';
+
+        // ===== DOM ELEMENTS =====
+        const loadingScreen = document.getElementById('loadingScreen');
+        const resultGrid = document.getElementById('resultGrid');
+        const noResults = document.getElementById('noResults');
+        const resultStats = document.getElementById('resultStats');
+        const buttonGroup = document.getElementById('buttonGroup');
+
+        // ===== NORMALIZE CITY FUNCTION (CRITICAL) =====
+        function normalizeCity(city) {
+            if (!city) return '';
+            // Trim leading/trailing spaces
+            // Replace multiple spaces with single space
+            // Convert to lowercase
+            return city.trim().replace(/\s+/g, ' ').toLowerCase();
+        }
+
+        // ===== GET RELATIVE TIME =====
+        function getRelativeTime(dateString) {
+            if (!dateString) return 'Recently';
+            
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffMins = Math.floor(diffTime / (1000 * 60));
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return diffMins + ' min ago';
+            if (diffHours < 24) return diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return diffDays + ' days ago';
+            
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+            });
+        }
+
+        // ===== BLOOD GROUP FULL NAME =====
+        const bloodGroupNames = {
+            'A+': 'A Positive',
+            'A-': 'A Negative',
+            'B+': 'B Positive',
+            'B-': 'B Negative',
+            'AB+': 'AB Positive',
+            'AB-': 'AB Negative',
+            'O+': 'O Positive',
+            'O-': 'O Negative'
+        };
+
+        // ===== LOAD RESULTS ON PAGE LOAD =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                // Get search parameters from localStorage
+                searchCity = localStorage.getItem('searchCity') || '';
+                searchBloodGroup = localStorage.getItem('searchBloodGroup') || '';
+
+                // Check if search parameters exist
+                if (!searchCity || !searchBloodGroup) {
+                    window.location.href = 'search.html';
+                    return;
+                }
+
+                // Update header display
+                document.getElementById('searchCity').textContent = searchCity;
+                document.getElementById('searchBloodGroup').textContent = searchBloodGroup;
+
+                // Fetch fresh results from localStorage
+                fetchResults();
+
+                // Hide loading screen
+                loadingScreen.classList.add('hide');
+
+            }, 600);
+        });
+
+        // ===== FETCH FRESH RESULTS =====
+        function fetchResults() {
+            // Get all providers from localStorage (FRESH DATA)
+            const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+            
+            // Normalize search city
+            const normalizedSearchCity = normalizeCity(searchCity);
+
+            // Find matching results
+            const results = [];
+
+            providers.forEach(function(provider) {
+                // Skip if no blood stock
+                if (!provider.bloodStock || provider.bloodStock.length === 0) return;
+                if (!provider.city) return;
+
+                // Normalize provider city
+                const normalizedProviderCity = normalizeCity(provider.city);
+
+                // Check if city matches (after normalization)
+                if (normalizedProviderCity === normalizedSearchCity) {
+                    // Find matching blood group with units > 0
+                    const stock = provider.bloodStock.find(s => 
+                        s.bloodGroup === searchBloodGroup && parseInt(s.units) > 0
+                    );
+
+                    if (stock) {
+                        results.push({
+                            hospitalName: provider.hospitalName,
+                            city: provider.city,
+                            address: provider.address,
+                            mobile: provider.mobile,
+                            email: provider.email,
+                            bloodGroup: stock.bloodGroup,
+                            units: parseInt(stock.units),
+                            updatedAt: stock.updatedAt
+                        });
+                    }
+                }
+            });
+
+            // Display results
+            displayResults(results);
+        }
+
+        // ===== DISPLAY RESULTS =====
+        function displayResults(results) {
+            if (results.length === 0) {
+                // Show no results message
+                resultGrid.style.display = 'none';
+                resultStats.style.display = 'none';
+                buttonGroup.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            // Show results
+            resultGrid.style.display = 'grid';
+            resultStats.style.display = 'flex';
+            buttonGroup.style.display = 'flex';
+            noResults.style.display = 'none';
+
+            // Update stats
+            document.getElementById('providerCount').textContent = results.length;
+            const totalUnits = results.reduce((sum, r) => sum + r.units, 0);
+            document.getElementById('totalUnits').textContent = totalUnits;
+
+            // Clear existing cards
+            resultGrid.innerHTML = '';
+
+            // Render cards
+            results.forEach(function(result, index) {
+                const cardHTML = `
+                    <div class="result-card">
+                        <div class="card-header">
+                            <div class="hospital-icon">
+                                <i class="fas fa-hospital-alt"></i>
+                            </div>
+                            <div class="hospital-info">
+                                <div class="hospital-name">${escapeHtml(result.hospitalName)}</div>
+                                <div class="hospital-badge">
+                                    <i class="fas fa-check-circle"></i>
+                                    Verified Provider
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="blood-info-row">
+                                <div class="blood-group-display">
+                                    <div class="blood-drop">
+                                        <span>${result.bloodGroup}</span>
+                                    </div>
+                                    <div class="blood-details">
+                                        <div class="blood-label">Blood Group</div>
+                                        <div class="blood-type">${result.bloodGroup}</div>
+                                    </div>
+                                </div>
+                                <div class="units-display">
+                                    <div class="units-label">Available</div>
+                                    <div class="units-value">${result.units}</div>
+                                    <div class="units-text">units</div>
+                                </div>
+                            </div>
+
+                            <div class="address-section">
+                                <h4><i class="fas fa-location-dot"></i> Contact Details</h4>
+                                
+                                <div class="address-item">
+                                    <div class="address-icon">
+                                        <i class="fas fa-city"></i>
+                                    </div>
+                                    <div class="address-text">
+                                        <div class="label">City</div>
+                                        <div class="value">${escapeHtml(result.city)}</div>
+                                    </div>
+                                </div>
+
+                                <div class="address-item">
+                                    <div class="address-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="address-text">
+                                        <div class="label">Address</div>
+                                        <div class="value">${escapeHtml(result.address || 'Not provided')}</div>
+                                    </div>
+                                </div>
+
+                                <div class="address-item">
+                                    <div class="address-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div class="address-text">
+                                        <div class="label">Mobile</div>
+                                        <div class="value phone">
+                                            <a href="tel:${result.mobile}" style="color: inherit; text-decoration: none;">
+                                                ${formatPhone(result.mobile)}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="updated-time">
+                                <i class="fas fa-clock"></i>
+                                Updated ${getRelativeTime(result.updatedAt)}
+                            </div>
+                            <div class="availability-badge">
+                                <i class="fas fa-circle"></i>
+                                Available
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                resultGrid.innerHTML += cardHTML;
+            });
+        }
+
+        // ===== ESCAPE HTML =====
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== FORMAT PHONE =====
+        function formatPhone(phone) {
+            if (!phone) return 'Not provided';
+            // Format as XXX-XXX-XXXX
+            const cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length === 10) {
+                return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+            }
+            return phone;
+        }
+
+        // ===== CONSOLE LOG =====
+        console.log('%c BloodAvail - Search Results ', 'background: #27ae60; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

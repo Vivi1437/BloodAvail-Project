@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Blood Stock – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --accent-blue: #3498db;
+            --accent-purple: #9b59b6;
+            --accent-orange: #e67e22;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --border-color: #e8e8e8;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #fff5f5 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(155, 89, 182, 0.05) 0%, transparent 70%);
+            top: -120px;
+            right: -100px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(155, 89, 182, 0.04) 0%, transparent 70%);
+            top: 40%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+
+        .bg-circle:nth-child(4) {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.03) 0%, transparent 70%);
+            bottom: 20%;
+            right: 3%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(25px, -35px) scale(1.04); }
+            50% { transform: translate(-15px, 25px) scale(0.96); }
+            75% { transform: translate(20px, 12px) scale(1.02); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .view-container {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TOP NAVIGATION ===== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 12px 24px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--accent-purple);
+            background: rgba(155, 89, 182, 0.08);
+            border-color: rgba(155, 89, 182, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+            transition: var(--transition);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        /* ===== VIEW CARD ===== */
+        .view-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px 45px;
+            box-shadow: 
+                0 25px 60px rgba(155, 89, 182, 0.08),
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .view-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-purple), #8e44ad, var(--accent-purple));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== HEADER ===== */
+        .view-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--accent-purple), #8e44ad);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3);
+            animation: iconPulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3); }
+            50% { box-shadow: 0 10px 45px rgba(155, 89, 182, 0.5); }
+        }
+
+        .header-icon i {
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+
+        .view-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .view-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .provider-info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.12), rgba(155, 89, 182, 0.04));
+            border: 1px solid rgba(155, 89, 182, 0.25);
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-top: 15px;
+        }
+
+        .provider-info-badge i {
+            color: var(--accent-purple);
+            font-size: 1rem;
+        }
+
+        .provider-info-badge span {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.12), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.25);
+        }
+
+        .message.success i {
+            color: var(--success-green);
+            font-size: 1.3rem;
+        }
+
+        .message.success span {
+            color: var(--success-green);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== SUMMARY STATS ===== */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #fafafa;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: rgba(155, 89, 182, 0.15);
+        }
+
+        .stat-card:nth-child(1) .stat-icon i {
+            color: var(--accent-purple);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: rgba(220, 53, 69, 0.15);
+        }
+
+        .stat-card:nth-child(2) .stat-icon i {
+            color: var(--primary-red);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: rgba(39, 174, 96, 0.15);
+        }
+
+        .stat-card:nth-child(3) .stat-icon i {
+            color: var(--accent-green);
+        }
+
+        .stat-icon i {
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== STOCK GRID ===== */
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* ===== BLOOD STOCK CARD ===== */
+        .blood-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid #f0f0f0;
+            position: relative;
+            transition: var(--transition);
+            animation: cardFadeIn 0.5s ease-out backwards;
+        }
+
+        .blood-card:nth-child(1) { animation-delay: 0.1s; }
+        .blood-card:nth-child(2) { animation-delay: 0.15s; }
+        .blood-card:nth-child(3) { animation-delay: 0.2s; }
+        .blood-card:nth-child(4) { animation-delay: 0.25s; }
+        .blood-card:nth-child(5) { animation-delay: 0.3s; }
+        .blood-card:nth-child(6) { animation-delay: 0.35s; }
+        .blood-card:nth-child(7) { animation-delay: 0.4s; }
+        .blood-card:nth-child(8) { animation-delay: 0.45s; }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .blood-card:hover {
+            border-color: var(--primary-red);
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .blood-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .blood-drop {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.3);
+            flex-shrink: 0;
+        }
+
+        .blood-drop span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .blood-info h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .blood-info .blood-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .blood-card-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px dashed #e0e0e0;
+            border-bottom: 1px dashed #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .units-display {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .units-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .units-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .units-display.low .units-value {
+            color: var(--warning-orange);
+        }
+
+        .units-display.critical .units-value {
+            color: var(--error-red);
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-badge.available {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--accent-green);
+        }
+
+        .status-badge.low {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning-orange);
+        }
+
+        .status-badge.critical {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--error-red);
+        }
+
+        .blood-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .action-btn.edit {
+            background: rgba(52, 152, 219, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .action-btn.edit:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+        }
+
+        .action-btn.delete {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--error-red);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--error-red);
+            color: var(--white);
+        }
+
+        .updated-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .updated-time i {
+            margin-right: 4px;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .empty-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(155, 89, 182, 0.05));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .empty-icon i {
+            font-size: 2.5rem;
+            color: var(--accent-purple);
+        }
+
+        .empty-state h3 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .empty-state .add-btn {
+            display: inline-flex;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: var(--white);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-dashboard {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-dashboard:hover {
+            background: rgba(155, 89, 182, 0.08);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .modal-icon.edit {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.05));
+        }
+
+        .modal-icon.edit i {
+            font-size: 2rem;
+            color: var(--accent-blue);
+        }
+
+        .modal-icon.delete {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(231, 76, 60, 0.05));
+        }
+
+        .modal-icon.delete i {
+            font-size: 2rem;
+            color: var(--error-red);
+        }
+
+        .modal-box h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .modal-box p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        /* Modal Form */
+        .modal-form {
+            margin-bottom: 25px;
+        }
+
+        .modal-form .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .modal-form .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .modal-form .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .modal-form .form-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.12);
+        }
+
+        .modal-form .form-input.readonly {
+            background: #f5f5f5;
+            color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            flex: 1;
+        }
+
+        .modal-btn.cancel {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .modal-btn.cancel:hover {
+            background: var(--border-color);
+        }
+
+        .modal-btn.save {
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .modal-btn.save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .modal-btn.delete {
+            background: linear-gradient(135deg, var(--error-red), #c0392b);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .modal-btn.delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        /* ===== FOOTER ===== */
+        .view-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .view-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .view-footer i {
+            color: var(--accent-purple);
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(155, 89, 182, 0.2);
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .view-card {
+                padding: 40px 25px;
+                border-radius: 22px;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .back-btn,
+            .add-btn {
+                justify-content: center;
+            }
+
+            .header-icon {
+                width: 80px;
+                height: 80px;
+            }
+
+            .header-icon i {
+                font-size: 2.2rem;
+            }
+
+            .view-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .summary-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px 10px;
+            }
+
+            .stat-value {
+                font-size: 1.3rem;
+            }
+
+            .stock-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-box {
+                padding: 30px 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .view-card {
+                padding: 35px 20px;
+            }
+
+            .header-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .header-icon i {
+                font-size: 1.9rem;
+            }
+
+            .view-header h2 {
+                font-size: 1.35rem;
+            }
+
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                text-align: left;
+                padding: 15px;
+            }
+
+            .stat-icon {
+                margin: 0;
+            }
+
+            .blood-drop {
+                width: 50px;
+                height: 50px;
+            }
+
+            .blood-drop span {
+                font-size: 1rem;
+            }
+
+            .units-value {
+                font-size: 1.6rem;
+            }
+
+            .blood-card-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Blood Stock...</p>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="view-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <a href="provider-dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+            <a href="provider-add-update.html" class="add-btn">
+                <i class="fas fa-plus"></i>
+                <span>Add Blood</span>
+            </a>
+        </div>
+
+        <!-- View Card -->
+        <div class="view-card">
+            <!-- Header -->
+            <div class="view-header">
+                <div class="header-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <h2>My Blood Stock</h2>
+                <p>Manage your blood inventory</p>
+                <div class="provider-info-badge">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span id="providerName">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="message success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Action completed successfully!</span>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="summary-stats" id="summaryStats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="totalGroups">0</div>
+                        <div class="stat-label">Blood Groups</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-boxes-stacked"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="totalUnits">0</div>
+                        <div class="stat-label">Total Units</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="lastUpdated">--</div>
+                        <div class="stat-label">Last Updated</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Grid -->
+            <div class="stock-grid" id="stockGrid">
+                <!-- Blood cards will be dynamically inserted here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3>No Blood Stock Found</h3>
+                <p>You haven't added any blood stock yet. Start by adding your first blood group.</p>
+                <a href="provider-add-update.html" class="add-btn">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Blood Stock</span>
+                </a>
+            </div>
+
+            <!-- Button Group -->
+            <div class="button-group" id="buttonGroup">
+                <a href="provider-add-update.html" class="btn btn-add">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add More Blood Stock</span>
+                </a>
+                <a href="provider-dashboard.html" class="btn btn-dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Back to Dashboard</span>
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="view-footer">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Your stock data is visible to blood seekers
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <div class="modal-icon edit">
+                <i class="fas fa-edit"></i>
+            </div>
+            <h3>Edit Blood Stock</h3>
+            <p>Update the number of units for this blood group</p>
+            
+            <div class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">Blood Group</label>
+                    <input type="text" class="form-input readonly" id="editBloodGroup" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Number of Units</label>
+                    <input type="number" class="form-input" id="editUnits" min="0" max="9999">
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="modal-btn save" onclick="saveEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <div class="modal-icon delete">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <h3>Delete Blood Stock</h3>
+            <p>Are you sure you want to delete <strong id="deleteBloodGroup">A+</strong> from your inventory? This action cannot be undone.</p>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="modal-btn delete" onclick="confirmDelete()">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let currentProvider = null;
+        let editingBloodGroup = null;
+        let deletingBloodGroup = null;
+
+        // Blood group names mapping
+        const bloodGroupNames = {
+            'A+': 'A Positive',
+            'A-': 'A Negative',
+            'B+': 'B Positive',
+            'B-': 'B Negative',
+            'AB+': 'AB Positive',
+            'AB-': 'AB Negative',
+            'O+': 'O Positive',
+            'O-': 'O Negative'
+        };
+
+        // ===== DOM ELEMENTS =====
+        const loadingScreen = document.getElementById('loadingScreen');
+        const stockGrid = document.getElementById('stockGrid');
+        const emptyState = document.getElementById('emptyState');
+        const buttonGroup = document.getElementById('buttonGroup');
+        const summaryStats = document.getElementById('summaryStats');
+        const successMessage = document.getElementById('successMessage');
+        const editModal = document.getElementById('editModal');
+        const deleteModal = document.getElementById('deleteModal');
+
+        // ===== CHECK AUTHENTICATION & LOAD DATA =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const loggedInProvider = localStorage.getItem('loggedInProvider');
+
+                // Check if logged in
+                if (!loggedInProvider) {
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Get provider data
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                currentProvider = providers.find(function(p) {
+                    return p.email.toLowerCase() === loggedInProvider.toLowerCase();
+                });
+
+                if (!currentProvider) {
+                    localStorage.removeItem('loggedInProvider');
+                    localStorage.removeItem('loggedInProviderId');
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Update provider name
+                document.getElementById('providerName').textContent = currentProvider.hospitalName || 'Provider';
+
+                // Load blood stock
+                loadBloodStock();
+
+                // Hide loading screen
+                loadingScreen.classList.add('hide');
+
+            }, 500);
+        });
+
+        // ===== LOAD BLOOD STOCK =====
+        function loadBloodStock() {
+            const bloodStock = currentProvider.bloodStock || [];
+
+            if (bloodStock.length === 0) {
+                // Show empty state
+                stockGrid.style.display = 'none';
+                summaryStats.style.display = 'none';
+                buttonGroup.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            // Show stock grid
+            stockGrid.style.display = 'grid';
+            summaryStats.style.display = 'grid';
+            buttonGroup.style.display = 'flex';
+            emptyState.style.display = 'none';
+
+            // Update summary stats
+            updateSummaryStats(bloodStock);
+
+            // Render blood cards
+            renderBloodCards(bloodStock);
+        }
+
+        // ===== UPDATE SUMMARY STATS =====
+        function updateSummaryStats(bloodStock) {
+            // Total groups with units > 0
+            const activeGroups = bloodStock.filter(s => parseInt(s.units) > 0).length;
+            document.getElementById('totalGroups').textContent = activeGroups;
+
+            // Total units
+            let totalUnits = 0;
+            bloodStock.forEach(function(stock) {
+                totalUnits += parseInt(stock.units) || 0;
+            });
+            document.getElementById('totalUnits').textContent = totalUnits;
+
+            // Last updated
+            if (bloodStock.length > 0) {
+                const sortedStock = [...bloodStock].sort((a, b) => 
+                    new Date(b.updatedAt) - new Date(a.updatedAt)
+                );
+                const lastStock = sortedStock[0];
+                if (lastStock.updatedAt) {
+                    document.getElementById('lastUpdated').textContent = getRelativeTime(lastStock.updatedAt);
+                }
+            }
+        }
+
+        // ===== GET RELATIVE TIME =====
+        function getRelativeTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffMins = Math.floor(diffTime / (1000 * 60));
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return diffMins + 'm ago';
+            if (diffHours < 24) return diffHours + 'h ago';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return diffDays + 'd ago';
+            
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        // ===== RENDER BLOOD CARDS =====
+        function renderBloodCards(bloodStock) {
+            stockGrid.innerHTML = '';
+
+            bloodStock.forEach(function(stock, index) {
+                const units = parseInt(stock.units) || 0;
+                let statusClass = 'available';
+                let statusText = 'Available';
+                let unitsClass = '';
+
+                if (units === 0) {
+                    statusClass = 'critical';
+                    statusText = 'Out of Stock';
+                    unitsClass = 'critical';
+                } else if (units <= 5) {
+                    statusClass = 'low';
+                    statusText = 'Low Stock';
+                    unitsClass = 'low';
+                }
+
+                const cardHTML = `
+                    <div class="blood-card" data-group="${stock.bloodGroup}">
+                        <div class="blood-card-header">
+                            <div class="blood-drop">
+                                <span>${stock.bloodGroup}</span>
+                            </div>
+                            <div class="blood-info">
+                                <h3>${stock.bloodGroup}</h3>
+                                <span class="blood-name">${bloodGroupNames[stock.bloodGroup] || stock.bloodGroup}</span>
+                            </div>
+                        </div>
+                        <div class="blood-card-body">
+                            <div class="units-display ${unitsClass}">
+                                <span class="units-value">${units}</span>
+                                <span class="units-label">units</span>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="blood-card-actions">
+                            <button class="action-btn edit" onclick="openEditModal('${stock.bloodGroup}')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="action-btn delete" onclick="openDeleteModal('${stock.bloodGroup}')">
+                                <i class="fas fa-trash-alt"></i>
+                                Delete
+                            </button>
+                        </div>
+                        <div class="updated-time">
+                            <i class="fas fa-clock"></i>
+                            Updated ${getRelativeTime(stock.updatedAt)}
+                        </div>
+                    </div>
+                `;
+
+                stockGrid.innerHTML += cardHTML;
+            });
+        }
+
+        // ===== OPEN EDIT MODAL =====
+        function openEditModal(bloodGroup) {
+            editingBloodGroup = bloodGroup;
+            
+            // Find the stock
+            const stock = currentProvider.bloodStock.find(s => s.bloodGroup === bloodGroup);
+            if (!stock) return;
+
+            // Populate modal
+            document.getElementById('editBloodGroup').value = bloodGroup + ' (' + bloodGroupNames[bloodGroup] + ')';
+            document.getElementById('editUnits').value = stock.units;
+
+            // Show modal
+            editModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+
+            // Focus on units input
+            setTimeout(() => {
+                document.getElementById('editUnits').focus();
+                document.getElementById('editUnits').select();
+            }, 300);
+        }
+
+        // ===== CLOSE EDIT MODAL =====
+        function closeEditModal() {
+            editModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            editingBloodGroup = null;
+        }
+
+        // ===== SAVE EDIT =====
+        function saveEdit() {
+            if (!editingBloodGroup) return;
+
+            const newUnits = parseInt(document.getElementById('editUnits').value);
+            
+            if (isNaN(newUnits) || newUnits < 0) {
+                alert('Please enter a valid number of units.');
+                return;
+            }
+
+            // Find and update the stock
+            const stockIndex = currentProvider.bloodStock.findIndex(s => s.bloodGroup === editingBloodGroup);
+            if (stockIndex === -1) return;
+
+            currentProvider.bloodStock[stockIndex].units = newUnits;
+            currentProvider.bloodStock[stockIndex].updatedAt = new Date().toISOString();
+
+            // Update in localStorage
+            saveProviderData();
+
+            // Close modal
+            closeEditModal();
+
+            // Reload stock display
+            loadBloodStock();
+
+            // Show success message
+            showSuccessMessage(`${editingBloodGroup} updated to ${newUnits} units!`);
+        }
+
+        // ===== OPEN DELETE MODAL =====
+        function openDeleteModal(bloodGroup) {
+            deletingBloodGroup = bloodGroup;
+            
+            // Update modal text
+            document.getElementById('deleteBloodGroup').textContent = bloodGroup + ' (' + bloodGroupNames[bloodGroup] + ')';
+
+            // Show modal
+            deleteModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ===== CLOSE DELETE MODAL =====
+        function closeDeleteModal() {
+            deleteModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            deletingBloodGroup = null;
+        }
+
+        // ===== CONFIRM DELETE =====
+        function confirmDelete() {
+            if (!deletingBloodGroup) return;
+
+            // Find and remove the stock
+            const stockIndex = currentProvider.bloodStock.findIndex(s => s.bloodGroup === deletingBloodGroup);
+            if (stockIndex === -1) return;
+
+            const deletedGroup = deletingBloodGroup;
+            currentProvider.bloodStock.splice(stockIndex, 1);
+
+            // Update in localStorage
+            saveProviderData();
+
+            // Close modal
+            closeDeleteModal();
+
+            // Reload stock display
+            loadBloodStock();
+
+            // Show success message
+            showSuccessMessage(`${deletedGroup} has been deleted from your inventory!`);
+        }
+
+        // ===== SAVE PROVIDER DATA =====
+        function saveProviderData() {
+            const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+            const providerIndex = providers.findIndex(p => 
+                p.email.toLowerCase() === currentProvider.email.toLowerCase()
+            );
+
+            if (providerIndex !== -1) {
+                providers[providerIndex] = currentProvider;
+                localStorage.setItem('bloodProviders', JSON.stringify(providers));
+            }
+        }
+
+        // ===== SHOW SUCCESS MESSAGE =====
+        function showSuccessMessage(text) {
+            document.getElementById('successText').textContent = text;
+            successMessage.classList.add('show');
+
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 4000);
+        }
+
+        // ===== CLOSE MODALS ON OVERLAY CLICK =====
+        editModal.addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+        // ===== CLOSE MODALS ON ESCAPE KEY =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditModal();
+                closeDeleteModal();
+            }
+        });
+
+        // ===== CONSOLE LOG =====
+        console.log('%c BloodAvail - View Blood Stock ', 'background: #9b59b6; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Dashboard – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --accent-blue: #3498db;
+            --accent-purple: #9b59b6;
+            --accent-orange: #e67e22;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --bg-light: #f8f9fa;
+            --border-color: #e8e8e8;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #fff5f5 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 25s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.05) 0%, transparent 70%);
+            top: -150px;
+            right: -100px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.04) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.04) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 30px) scale(0.95); }
+            75% { transform: translate(25px, 15px) scale(1.02); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .provider-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--light-red);
+            border-radius: 50px;
+            border: 1px solid rgba(220, 53, 69, 0.1);
+        }
+
+        .provider-avatar {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .provider-avatar i {
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .provider-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .provider-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .provider-role {
+            font-size: 0.7rem;
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .header-logout {
+            background: none;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .header-logout:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        /* ===== WELCOME SECTION ===== */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .welcome-badge i {
+            font-size: 1rem;
+        }
+
+        .welcome-section h2 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-section h2 span {
+            color: var(--primary-red);
+        }
+
+        .welcome-section p {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ===== DASHBOARD GRID ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ===== DASHBOARD CARD ===== */
+        .dashboard-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+        .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+        .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+        .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Card Variants */
+        .dashboard-card.profile::before {
+            background: linear-gradient(90deg, var(--accent-blue), #2980b9);
+        }
+
+        .dashboard-card.add-stock::before {
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-green-dark));
+        }
+
+        .dashboard-card.view-stock::before {
+            background: linear-gradient(90deg, var(--accent-purple), #8e44ad);
+        }
+
+        .dashboard-card.logout::before {
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-dark));
+        }
+
+        .dashboard-card:hover::before {
+            height: 100%;
+            opacity: 0.05;
+        }
+
+        /* Card Icon */
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .dashboard-card.profile .card-icon {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.05));
+        }
+
+        .dashboard-card.add-stock .card-icon {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(39, 174, 96, 0.05));
+        }
+
+        .dashboard-card.view-stock .card-icon {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(155, 89, 182, 0.05));
+        }
+
+        .dashboard-card.logout .card-icon {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.05));
+        }
+
+        .card-icon i {
+            font-size: 2rem;
+            transition: var(--transition);
+        }
+
+        .dashboard-card.profile .card-icon i {
+            color: var(--accent-blue);
+        }
+
+        .dashboard-card.add-stock .card-icon i {
+            color: var(--accent-green);
+        }
+
+        .dashboard-card.view-stock .card-icon i {
+            color: var(--accent-purple);
+        }
+
+        .dashboard-card.logout .card-icon i {
+            color: var(--primary-red);
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .dashboard-card:hover .card-icon i {
+            transform: scale(1.1);
+        }
+
+        /* Card Content */
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .dashboard-card.profile .card-action {
+            color: var(--accent-blue);
+        }
+
+        .dashboard-card.add-stock .card-action {
+            color: var(--accent-green);
+        }
+
+        .dashboard-card.view-stock .card-action {
+            color: var(--accent-purple);
+        }
+
+        .dashboard-card.logout .card-action {
+            color: var(--primary-red);
+        }
+
+        .card-action i {
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover .card-action i {
+            transform: translateX(5px);
+        }
+
+        /* ===== QUICK STATS ===== */
+        .quick-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease-out 0.5s backwards;
+        }
+
+        .stat-item {
+            background: var(--white);
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            min-width: 150px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--light-red);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .stat-icon i {
+            color: var(--primary-red);
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== FOOTER ===== */
+        .dashboard-footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .dashboard-footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dashboard-footer i {
+            color: var(--accent-green);
+        }
+
+        .home-link {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== LOGOUT MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.05));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .modal-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+        }
+
+        .modal-box h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .modal-box p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .modal-btn.cancel {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .modal-btn.cancel:hover {
+            background: var(--border-color);
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .provider-info {
+                flex: 1;
+            }
+
+            .welcome-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .dashboard-card {
+                padding: 30px 25px;
+            }
+
+            .card-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .card-icon i {
+                font-size: 1.7rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+
+            .quick-stats {
+                gap: 15px;
+            }
+
+            .stat-item {
+                padding: 15px 20px;
+                min-width: 130px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 30px 15px 50px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .provider-details {
+                display: none;
+            }
+
+            .header-logout span {
+                display: none;
+            }
+
+            .header-logout {
+                padding: 10px 12px;
+            }
+
+            .welcome-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .welcome-section p {
+                font-size: 0.95rem;
+            }
+
+            .dashboard-card {
+                padding: 25px 20px;
+            }
+
+            .modal-box {
+                padding: 30px 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-btn {
+                width: 100%;
+            }
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--light-red);
+            border-top-color: var(--primary-red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Dashboard...</p>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>BloodAvail</h1>
+                    <span>Emergency Blood System</span>
+                </div>
+            </a>
+
+            <div class="header-right">
+                <div class="provider-info">
+                    <div class="provider-avatar">
+                        <i class="fas fa-hospital-alt"></i>
+                    </div>
+                    <div class="provider-details">
+                        <span class="provider-name" id="providerName">Loading...</span>
+                        <span class="provider-role">Blood Provider</span>
+                    </div>
+                </div>
+
+                <button class="header-logout" onclick="showLogoutModal()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-badge">
+                <i class="fas fa-check-circle"></i>
+                <span>Provider Dashboard</span>
+            </div>
+            <h2>Welcome, <span id="welcomeName">Provider</span>!</h2>
+            <p>Manage your blood inventory and help save lives during emergencies</p>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- My Profile Card -->
+            <a href="provider-profile.html" class="dashboard-card profile">
+                <div class="card-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 class="card-title">My Profile</h3>
+                <p class="card-description">View and manage your provider account details and information</p>
+                <span class="card-action">
+                    Manage Profile <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <!-- Add/Update Blood Stock Card -->
+            <a href="provider-add-update.html" class="dashboard-card add-stock">
+                <div class="card-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h3 class="card-title">Add / Update Stock</h3>
+                <p class="card-description">Add new blood units or update existing blood group quantities</p>
+                <span class="card-action">
+                    Manage Stock <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <!-- View Blood Stock Card -->
+            <a href="provider-view-stock.html" class="dashboard-card view-stock">
+                <div class="card-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <h3 class="card-title">View Blood Stock</h3>
+                <p class="card-description">View all available blood groups and their current unit counts</p>
+                <span class="card-action">
+                    View Inventory <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <!-- Logout Card -->
+            <div class="dashboard-card logout" onclick="showLogoutModal()" style="cursor: pointer;">
+                <div class="card-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <h3 class="card-title">Logout</h3>
+                <p class="card-description">Securely logout from your blood provider account</p>
+                <span class="card-action">
+                    Sign Out <i class="fas fa-arrow-right"></i>
+                </span>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="stat-value" id="totalGroups">8</div>
+                <div class="stat-label">Blood Groups</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-value" id="totalUnits">0</div>
+                <div class="stat-label">Total Units</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-value" id="lastUpdated">--</div>
+                <div class="stat-label">Last Updated</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <p>
+            <i class="fas fa-shield-alt"></i>
+            BloodAvail – Emergency Blood Availability System
+        </p>
+    </footer>
+
+    <!-- Logout Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to logout from your provider account?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="hideLogoutModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="performLogout()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== CHECK AUTHENTICATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loggedInProvider = localStorage.getItem('loggedInProvider');
+
+            // Simulate loading
+            setTimeout(() => {
+                // Check if provider is logged in
+                if (!loggedInProvider) {
+                    // Not logged in - redirect to login page
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Get provider data
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                const provider = providers.find(p => p.email.toLowerCase() === loggedInProvider.toLowerCase());
+
+                if (!provider) {
+                    // Provider not found - clear session and redirect
+                    localStorage.removeItem('loggedInProvider');
+                    localStorage.removeItem('loggedInProviderId');
+                    window.location.href = 'provider-login.html';
+                    return;
+                }
+
+                // Update UI with provider info
+                document.getElementById('providerName').textContent = provider.hospitalName;
+                document.getElementById('welcomeName').textContent = provider.hospitalName.split(' ')[0];
+
+                // Calculate stats
+                updateStats(provider);
+
+                // Hide loading screen
+                loadingScreen.classList.add('hide');
+
+            }, 800);
+        });
+
+        // ===== UPDATE STATS =====
+        function updateStats(provider) {
+            const bloodStock = provider.bloodStock || [];
+            
+            // Calculate total units
+            let totalUnits = 0;
+            bloodStock.forEach(stock => {
+                totalUnits += parseInt(stock.units) || 0;
+            });
+
+            document.getElementById('totalUnits').textContent = totalUnits;
+
+            // Last updated
+            if (bloodStock.length > 0) {
+                const lastStock = bloodStock[bloodStock.length - 1];
+                if (lastStock.updatedAt) {
+                    const date = new Date(lastStock.updatedAt);
+                    document.getElementById('lastUpdated').textContent = date.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                } else {
+                    document.getElementById('lastUpdated').textContent = 'Today';
+                }
+            } else {
+                document.getElementById('lastUpdated').textContent = '--';
+            }
+        }
+
+        // ===== LOGOUT MODAL =====
+        function showLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideLogoutModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+
+        // ===== PERFORM LOGOUT =====
+        function performLogout() {
+            // Clear logged-in provider data from localStorage
+            localStorage.removeItem('loggedInProvider');
+            localStorage.removeItem('loggedInProviderId');
+
+            // Redirect to login page
+            window.location.href = 'provider-login.html';
+        }
+
+        // Console log
+        console.log('%c BloodAvail - Provider Dashboard ', 'background: #27ae60; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+    </script>
+</body>
+</html>

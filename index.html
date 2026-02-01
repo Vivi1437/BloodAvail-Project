@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodAvail – Emergency Blood Availability System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* ===== COLOR VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --accent-blue: #3498db;
+            --accent-green: #27ae60;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(220, 53, 69, 0.15);
+            --shadow-hover: 0 8px 25px rgba(220, 53, 69, 0.25);
+            --shadow-blue: 0 4px 15px rgba(52, 152, 219, 0.15);
+            --shadow-green: 0 4px 15px rgba(39, 174, 96, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== HEADER / NAVBAR ===== */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-red);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            padding: 10px 22px !important;
+            border-radius: 50px;
+            font-weight: 600 !important;
+        }
+
+        .nav-btn-seeker {
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+            color: var(--white) !important;
+        }
+
+        .nav-btn-seeker:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .nav-btn-seeker::after {
+            display: none;
+        }
+
+        .nav-btn-provider {
+            background: linear-gradient(135deg, var(--accent-green), #1e8449);
+            color: var(--white) !important;
+        }
+
+        .nav-btn-provider:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-green);
+        }
+
+        .nav-btn-provider::after {
+            display: none;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-red);
+            cursor: pointer;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--light-red) 0%, var(--white) 50%, var(--lighter-red) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-text h2 span {
+            color: var(--primary-red);
+            position: relative;
+        }
+
+        .hero-text h2 span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(220, 53, 69, 0.2);
+            z-index: -1;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .hero-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 25px 0;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-feature i {
+            color: var(--primary-red);
+            font-size: 1.1rem;
+            width: 24px;
+        }
+
+        .hero-feature span {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 35px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-seeker {
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+            color: var(--white);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .btn-seeker:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-provider {
+            background: linear-gradient(135deg, var(--accent-green), #1e8449);
+            color: var(--white);
+            box-shadow: var(--shadow-green);
+        }
+
+        .btn-provider:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-illustration {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .blood-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(220, 53, 69, 0.15);
+            text-align: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .blood-icon-large {
+            font-size: 80px;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+        }
+
+        .blood-types {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .blood-type {
+            background: var(--light-red);
+            padding: 12px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            color: var(--primary-red);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .blood-type:hover {
+            background: var(--primary-red);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .pulse-circle {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pulse-circle::before,
+        .pulse-circle::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--primary-red);
+            animation: pulse 2s ease-out infinite;
+        }
+
+        .pulse-circle::after {
+            animation-delay: 1s;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .pulse-circle i {
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        /* ===== HOW IT WORKS SECTION ===== */
+        .how-it-works {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: var(--light-red);
+            color: var(--primary-red);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Two Column Layout for How It Works */
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .user-type-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px 30px;
+            border: 2px solid #f0f0f0;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-type-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+
+        .user-type-section.seeker::before {
+            background: linear-gradient(90deg, var(--accent-blue), #2980b9);
+        }
+
+        .user-type-section.provider::before {
+            background: linear-gradient(90deg, var(--accent-green), #1e8449);
+        }
+
+        .user-type-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border-color: transparent;
+        }
+
+        .user-type-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #f0f0f0;
+        }
+
+        .user-type-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seeker .user-type-icon {
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+        }
+
+        .provider .user-type-icon {
+            background: linear-gradient(135deg, var(--accent-green), #1e8449);
+        }
+
+        .user-type-icon i {
+            font-size: 26px;
+            color: var(--white);
+        }
+
+        .user-type-header h3 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .user-type-header span {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: block;
+            margin-top: 2px;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 16px;
+            transition: var(--transition);
+        }
+
+        .step-item:hover {
+            background: var(--light-red);
+        }
+
+        .seeker .step-item:hover {
+            background: rgba(52, 152, 219, 0.08);
+        }
+
+        .provider .step-item:hover {
+            background: rgba(39, 174, 96, 0.08);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .seeker .step-number {
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+        }
+
+        .provider .step-number {
+            background: linear-gradient(135deg, var(--accent-green), #1e8449);
+        }
+
+        .step-content h4 {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .seeker .step-icon {
+            background: rgba(52, 152, 219, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .provider .step-icon {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--accent-green);
+        }
+
+        .step-icon i {
+            font-size: 18px;
+        }
+
+        .user-type-cta {
+            margin-top: 25px;
+        }
+
+        .user-type-cta .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--light-red) 0%, var(--white) 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-dark));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: transparent;
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-red);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--primary-red);
+        }
+
+        .feature-icon i {
+            font-size: 28px;
+            color: var(--primary-red);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon i {
+            color: var(--white);
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* ===== CALL TO ACTION SECTION ===== */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .cta-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            color: var(--white);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .cta-content p {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 35px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: var(--white);
+            color: var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline-white {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+
+        .btn-outline-white:hover {
+            background: var(--white);
+            color: var(--accent-green);
+            transform: translateY(-3px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 20px;
+        }
+
+        .footer-brand .logo-icon {
+            background: var(--primary-red);
+        }
+
+        .footer-brand .logo-text h1 {
+            color: var(--white);
+        }
+
+        .footer-brand .logo-text span {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom .highlight {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background: var(--primary-red);
+            transform: translateY(-3px);
+        }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 15px 0;
+            color: var(--text-dark);
+            font-weight: 500;
+            border-bottom: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--primary-red);
+            padding-left: 10px;
+        }
+
+        .mobile-menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .mobile-menu-buttons a {
+            padding: 14px 20px;
+            border-radius: 50px;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .mobile-menu-buttons .btn-seeker-mobile {
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+            color: var(--white);
+        }
+
+        .mobile-menu-buttons .btn-provider-mobile {
+            background: linear-gradient(135deg, var(--accent-green), #1e8449);
+            color: var(--white);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-text h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero-features {
+                align-items: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+
+            .blood-card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .how-it-works-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+
+            .hero-text h2 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .cta-content h2 {
+                font-size: 1.8rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-brand .logo {
+                justify-content: center;
+            }
+
+            .footer-links {
+                align-items: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .btn {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h2 {
+                font-size: 1.7rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+
+            .blood-card {
+                padding: 30px 20px;
+            }
+
+            .blood-icon-large {
+                font-size: 60px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .user-type-section {
+                padding: 30px 20px;
+            }
+
+            .step-item {
+                flex-wrap: wrap;
+            }
+
+            .step-icon {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+
+        /* ===== SCROLL TO TOP BUTTON ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HEADER / NAVBAR ===== -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BloodAvail</h1>
+                        <span>Emergency Blood System</span>
+                    </div>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="user-login.html" class="nav-btn nav-btn-seeker">
+                        <i class="fas fa-user"></i> Seeker Login
+                    </a></li>
+                    <li><a href="provider-login.html" class="nav-btn nav-btn-provider">
+                        <i class="fas fa-hospital"></i> Provider Login
+                    </a></li>
+                </ul>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars" id="menuIcon"></i>
+                </button>
+            </nav>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#home" onclick="toggleMobileMenu()">Home</a>
+            <a href="#how-it-works" onclick="toggleMobileMenu()">How It Works</a>
+            <a href="#features" onclick="toggleMobileMenu()">Features</a>
+            <div class="mobile-menu-buttons">
+                <a href="user-login.html" class="btn-seeker-mobile">
+                    <i class="fas fa-user"></i> Blood Seeker Login
+                </a>
+                <a href="provider-login.html" class="btn-provider-mobile">
+                    <i class="fas fa-hospital"></i> Provider Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>Find <span>Blood</span> Quickly During Emergencies</h2>
+                    <p>
+                        BloodAvail connects blood seekers with hospitals and blood banks instantly. 
+                        Search available blood units by city and blood group to save precious time during medical emergencies.
+                    </p>
+                    <div class="hero-features">
+                        <div class="hero-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Search blood by city & blood group</span>
+                        </div>
+                        <div class="hero-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>View real-time blood availability</span>
+                        </div>
+                        <div class="hero-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Fast & emergency-friendly interface</span>
+                        </div>
+                    </div>
+                    <div class="hero-buttons">
+                        <a href="user-login.html" class="btn btn-seeker">
+                            <i class="fas fa-user"></i>
+                            Blood Seeker Login
+                        </a>
+                        <a href="provider-login.html" class="btn btn-provider">
+                            <i class="fas fa-hospital"></i>
+                            Blood Provider Login
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <div class="blood-card">
+                            <i class="fas fa-hand-holding-medical blood-icon-large"></i>
+                            <h3 style="color: var(--text-dark); font-size: 1.3rem; margin-bottom: 5px;">Available Blood Types</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">All blood groups supported</p>
+                            <div class="blood-types">
+                                <div class="blood-type">A+</div>
+                                <div class="blood-type">A-</div>
+                                <div class="blood-type">B+</div>
+                                <div class="blood-type">B-</div>
+                                <div class="blood-type">AB+</div>
+                                <div class="blood-type">AB-</div>
+                                <div class="blood-type">O+</div>
+                                <div class="blood-type">O-</div>
+                            </div>
+                            <div class="pulse-circle">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS SECTION ===== -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Simple Process</span>
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">
+                    Our system provides a simple and efficient way for both blood seekers and providers
+                </p>
+            </div>
+            
+            <div class="how-it-works-grid">
+                <!-- For Blood Seekers -->
+                <div class="user-type-section seeker">
+                    <div class="user-type-header">
+                        <div class="user-type-icon">
+                            <i class="fas fa-user-injured"></i>
+                        </div>
+                        <div>
+                            <h3>For Blood Seekers</h3>
+                            <span>Users looking for blood</span>
+                        </div>
+                    </div>
+                    
+                    <div class="steps-list">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>User Login</h4>
+                                <p>Login to your blood seeker account to access all features</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Search Blood</h4>
+                                <p>Search for blood by selecting your city and required blood group</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>View Results</h4>
+                                <p>View available blood units from providers in your selected city</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-list-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-type-cta">
+                        <a href="user-login.html" class="btn btn-seeker">
+                            <i class="fas fa-user"></i>
+                            Blood Seeker Login
+                        </a>
+                    </div>
+                </div>
+
+                <!-- For Blood Providers -->
+                <div class="user-type-section provider">
+                    <div class="user-type-header">
+                        <div class="user-type-icon">
+                            <i class="fas fa-hospital-alt"></i>
+                        </div>
+                        <div>
+                            <h3>For Blood Providers</h3>
+                            <span>Hospitals & Blood Banks</span>
+                        </div>
+                    </div>
+                    
+                    <div class="steps-list">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Provider Login</h4>
+                                <p>Login to your hospital or blood bank provider account</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Add / Update Stock</h4>
+                                <p>Add new blood units or update existing blood stock quantities</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Manage Availability</h4>
+                                <p>Monitor and manage your blood inventory from the dashboard</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-type-cta">
+                        <a href="provider-login.html" class="btn btn-provider">
+                            <i class="fas fa-hospital"></i>
+                            Provider Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURES SECTION ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Key Features</span>
+                <h2 class="section-title">System Features</h2>
+                <p class="section-subtitle">
+                    Designed with essential features for emergency blood availability management
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h3>City-Based Search</h3>
+                    <p>Search for blood availability in your specific city to find nearby blood providers quickly</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3>Blood Group Filter</h3>
+                    <p>Filter search results by blood group (A+, A-, B+, B-, AB+, AB-, O+, O-) for precise results</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Provider Dashboard</h3>
+                    <p>Simple and intuitive dashboard for blood providers to manage their blood inventory</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Emergency Friendly</h3>
+                    <p>Fast and responsive interface designed for quick access during critical emergency situations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CALL TO ACTION SECTION ===== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Get Started Today</h2>
+                <p>
+                    Whether you're looking for blood during an emergency or you're a provider wanting to help, 
+                    our system makes it simple and fast. Login now to access all features.
+                </p>
+                <div class="cta-buttons">
+                    <a href="user-login.html" class="btn btn-white">
+                        <i class="fas fa-user"></i>
+                        Blood Seeker Login
+                    </a>
+                    <a href="provider-login.html" class="btn btn-outline-white">
+                        <i class="fas fa-hospital"></i>
+                        Provider Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>BloodAvail</h1>
+                            <span>Emergency Blood System</span>
+                        </div>
+                    </a>
+                    <p>
+                        An intelligent emergency blood availability system designed to help users find blood units 
+                        quickly during emergencies. Connecting blood seekers with providers efficiently.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="#home"><i class="fas fa-chevron-right"></i> Home</a>
+                        <a href="#how-it-works"><i class="fas fa-chevron-right"></i> How It Works</a>
+                        <a href="#features"><i class="fas fa-chevron-right"></i> Features</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-heading">User Access</h3>
+                    <div class="footer-links">
+                        <a href="user-login.html"><i class="fas fa-chevron-right"></i> Blood Seeker Login</a>
+                        <a href="user-register.html"><i class="fas fa-chevron-right"></i> Register as Seeker</a>
+                        <a href="provider-login.html"><i class="fas fa-chevron-right"></i> Provider Login</a>
+                        <a href="provider-register.html"><i class="fas fa-chevron-right"></i> Register as Provider</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <span class="highlight">BloodAvail</span> – Emergency Blood Availability System
+                </p>
+                <div class="footer-social">
+                    <a href="#" title="Share"><i class="fas fa-share-alt"></i></a>
+                    <a href="#" title="Info"><i class="fas fa-info-circle"></i></a>
+                    <a href="#" title="Help"><i class="fas fa-question-circle"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== SCROLL TO TOP BUTTON ===== -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+            mobileMenu.classList.toggle('active');
+            
+            if (mobileMenu.classList.contains('active')) {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            } else {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        }
+
+        // Scroll to Top Button Visibility
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+
+            const header = document.querySelector('header');
+            if (window.pageYOffset > 50) {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // Scroll to Top Function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            if (!mobileMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.user-type-section, .feature-card, .step-item').forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+            observer.observe(el);
+        });
+
+        // Blood type hover effect
+        document.querySelectorAll('.blood-type').forEach(type => {
+            type.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            type.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

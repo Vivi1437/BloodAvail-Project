@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Login – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --white: #ffffff;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --border-color: #e8e8e8;
+            --shadow: 0 10px 40px rgba(220, 53, 69, 0.15);
+            --shadow-hover: 0 15px 50px rgba(220, 53, 69, 0.25);
+            --shadow-green: 0 8px 25px rgba(39, 174, 96, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #ffe8e8 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.07) 0%, transparent 70%);
+            top: -120px;
+            right: -120px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.05) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            top: 45%;
+            left: 8%;
+            animation-delay: -10s;
+        }
+
+        .bg-circle:nth-child(4) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(39, 174, 96, 0.04) 0%, transparent 70%);
+            bottom: 25%;
+            right: 5%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(25px, -35px) scale(1.04); }
+            50% { transform: translate(-15px, 25px) scale(0.96); }
+            75% { transform: translate(20px, 12px) scale(1.02); }
+        }
+
+        /* ===== PULSE RINGS ===== */
+        .pulse-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            border: 1px solid rgba(220, 53, 69, 0.08);
+            animation: pulseRing 4s infinite ease-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .pulse-ring:nth-child(2) {
+            animation-delay: 1.3s;
+        }
+
+        .pulse-ring:nth-child(3) {
+            animation-delay: 2.6s;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* ===== LOGIN CONTAINER ===== */
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(45px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            padding: 12px 24px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .back-btn i {
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--primary-red);
+            background: var(--light-red);
+            border-color: rgba(220, 53, 69, 0.2);
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.15);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        /* ===== LOGIN CARD ===== */
+        .login-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px 45px;
+            box-shadow: 
+                0 25px 60px rgba(220, 53, 69, 0.1),
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-green-dark), var(--accent-green));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== HEADER ===== */
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.35);
+            animation: logoPulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 8px 25px rgba(220, 53, 69, 0.35); }
+            50% { box-shadow: 0 8px 40px rgba(220, 53, 69, 0.55); }
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 28px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .login-header h2 {
+            font-size: 1.7rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .provider-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.12), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.25);
+            padding: 10px 22px;
+            border-radius: 50px;
+            margin-top: 18px;
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .provider-badge i {
+            font-size: 1rem;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: shakeIn 0.5s ease-out;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        @keyframes shakeIn {
+            0%, 100% { transform: translateX(0); }
+            15%, 45%, 75% { transform: translateX(-6px); }
+            30%, 60%, 90% { transform: translateX(6px); }
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.12), rgba(231, 76, 60, 0.04));
+            border: 1px solid rgba(231, 76, 60, 0.25);
+        }
+
+        .message.error i {
+            color: var(--error-red);
+            font-size: 1.3rem;
+        }
+
+        .message.error span {
+            color: var(--error-red);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.12), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.25);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.success i {
+            color: var(--success-green);
+            font-size: 1.3rem;
+        }
+
+        .message.success span {
+            color: var(--success-green);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== FORM STYLES ===== */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            position: relative;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.2s; }
+        .form-group:nth-child(2) { animation-delay: 0.3s; }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 55px 18px 52px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.12);
+        }
+
+        .form-input:focus::placeholder {
+            opacity: 0.6;
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--accent-green);
+        }
+
+        /* Floating Label */
+        .floating-label {
+            position: absolute;
+            left: 52px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: var(--transition);
+            background: transparent;
+            padding: 0 6px;
+        }
+
+        .form-input:focus ~ .floating-label,
+        .form-input:not(:placeholder-shown) ~ .floating-label {
+            top: 0;
+            left: 14px;
+            font-size: 0.78rem;
+            color: var(--accent-green);
+            background: var(--white);
+            font-weight: 500;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: var(--accent-green);
+        }
+
+        /* Input Validation States */
+        .form-input.error {
+            border-color: var(--error-red);
+        }
+
+        .form-input.error ~ .input-icon {
+            color: var(--error-red);
+        }
+
+        .form-input.success {
+            border-color: var(--success-green);
+        }
+
+        .form-input.success ~ .input-icon {
+            color: var(--success-green);
+        }
+
+        /* Input Feedback */
+        .input-feedback {
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding-left: 5px;
+        }
+
+        .input-feedback.error {
+            color: var(--error-red);
+            display: flex;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+            animation: fadeInUp 0.5s ease-out 0.4s backwards;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-green);
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: 0.6s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .login-btn i {
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Loading State */
+        .login-btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .login-btn.loading .btn-text,
+        .login-btn.loading .btn-icon {
+            opacity: 0;
+        }
+
+        .login-btn .spinner {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .login-btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Back Button */
+        .back-btn-bottom {
+            width: 100%;
+            padding: 16px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            background: var(--white);
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .back-btn-bottom i {
+            transition: var(--transition);
+        }
+
+        .back-btn-bottom:hover {
+            background: var(--light-red);
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .back-btn-bottom:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+        }
+
+        .divider span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ===== REGISTER LINK ===== */
+        .register-section {
+            text-align: center;
+        }
+
+        .register-text {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .register-link {
+            color: var(--accent-green);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .register-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-green);
+            transition: var(--transition);
+        }
+
+        .register-link:hover::after {
+            width: 100%;
+        }
+
+        .register-link:hover {
+            color: var(--primary-red);
+        }
+
+        .register-link:hover::after {
+            background: var(--primary-red);
+        }
+
+        /* ===== FOOTER ===== */
+        .login-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .login-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-footer i {
+            color: var(--accent-green);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 576px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .login-card {
+                padding: 40px 25px;
+                border-radius: 22px;
+            }
+
+            .back-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .logo-icon i {
+                font-size: 24px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.35rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-input {
+                padding: 16px 50px 16px 48px;
+                font-size: 0.95rem;
+            }
+
+            .input-icon {
+                left: 16px;
+                font-size: 1rem;
+            }
+
+            .floating-label {
+                left: 48px;
+                font-size: 0.95rem;
+            }
+
+            .password-toggle {
+                right: 16px;
+            }
+
+            .login-btn {
+                padding: 16px 25px;
+                font-size: 1rem;
+            }
+
+            .back-btn-bottom {
+                padding: 14px 25px;
+                font-size: 0.95rem;
+            }
+
+            .provider-badge {
+                padding: 8px 18px;
+                font-size: 0.8rem;
+            }
+
+            .pulse-ring {
+                width: 350px;
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .login-card {
+                padding: 35px 20px;
+            }
+
+            .logo {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .login-header h2 {
+                font-size: 1.35rem;
+            }
+
+            .form-input {
+                padding: 14px 45px 14px 44px;
+            }
+
+            .login-btn,
+            .back-btn-bottom {
+                padding: 14px 20px;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        .form-input:focus-visible {
+            outline: 2px solid var(--accent-green);
+            outline-offset: 2px;
+        }
+
+        .login-btn:focus-visible,
+        .back-btn-bottom:focus-visible {
+            outline: 2px solid var(--accent-green);
+            outline-offset: 2px;
+        }
+
+        .back-btn:focus-visible {
+            outline: 2px solid var(--primary-red);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Pulse Rings -->
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BloodAvail</h1>
+                        <span>Emergency Blood System</span>
+                    </div>
+                </a>
+                <h2>Welcome Back!</h2>
+                <p>Login to manage your blood inventory</p>
+                <div class="provider-badge">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Blood Provider Portal</span>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="message error" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid credentials. Please try again.</span>
+            </div>
+
+            <!-- Success Message -->
+            <div class="message success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Login successful! Redirecting...</span>
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form" id="loginForm" novalidate>
+                <!-- Email Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            id="email" 
+                            name="email"
+                            placeholder=" "
+                            required
+                            autocomplete="email"
+                        >
+                        <i class="fas fa-envelope input-icon"></i>
+                        <label class="floating-label" for="email">Email Address</label>
+                    </div>
+                    <div class="input-feedback" id="emailFeedback">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Please enter a valid email address</span>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            id="password" 
+                            name="password"
+                            placeholder=" "
+                            required
+                            autocomplete="current-password"
+                        >
+                        <i class="fas fa-lock input-icon"></i>
+                        <label class="floating-label" for="password">Password</label>
+                        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="input-feedback" id="passwordFeedback">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Password is required</span>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
+                    <!-- Login Button -->
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <span class="btn-text">Login as Blood Provider</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <!-- Back to Home Button -->
+                    <a href="index.html" class="back-btn-bottom">
+                        <i class="fas fa-home"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>New to BloodAvail?</span>
+            </div>
+
+            <!-- Register Link -->
+            <div class="register-section">
+                <p class="register-text">
+                    Don't have a provider account? 
+                    <a href="provider-register.html" class="register-link">Register here</a>
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Secure login for hospitals & blood banks
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== DOM ELEMENTS =====
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const emailFeedback = document.getElementById('emailFeedback');
+        const passwordFeedback = document.getElementById('passwordFeedback');
+
+        // ===== CHECK IF ALREADY LOGGED IN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInProvider = localStorage.getItem('loggedInProvider');
+            if (loggedInProvider) {
+                // Already logged in - redirect to dashboard
+                window.location.href = 'provider-dashboard.html';
+            }
+        });
+
+        // ===== TOGGLE PASSWORD VISIBILITY =====
+        passwordToggle.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icon
+            const icon = this.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // ===== EMAIL VALIDATION FUNCTION =====
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // ===== SHOW ERROR FUNCTION =====
+        function showInputError(input, feedbackId, message) {
+            input.classList.add('error');
+            input.classList.remove('success');
+            const feedback = document.getElementById(feedbackId);
+            feedback.querySelector('span').textContent = message;
+            feedback.classList.add('error');
+        }
+
+        // ===== CLEAR ERROR FUNCTION =====
+        function clearInputError(input, feedbackId) {
+            input.classList.remove('error');
+            document.getElementById(feedbackId).classList.remove('error');
+        }
+
+        // ===== SHOW SUCCESS FUNCTION =====
+        function showInputSuccess(input, feedbackId) {
+            input.classList.remove('error');
+            input.classList.add('success');
+            document.getElementById(feedbackId).classList.remove('error');
+        }
+
+        // ===== REAL-TIME EMAIL VALIDATION =====
+        emailInput.addEventListener('blur', function() {
+            if (this.value && !validateEmail(this.value)) {
+                showInputError(this, 'emailFeedback', 'Please enter a valid email address');
+            } else if (this.value && validateEmail(this.value)) {
+                showInputSuccess(this, 'emailFeedback');
+            } else if (!this.value) {
+                showInputError(this, 'emailFeedback', 'Email address is required');
+            }
+        });
+
+        emailInput.addEventListener('input', function() {
+            if (this.classList.contains('error') && validateEmail(this.value)) {
+                showInputSuccess(this, 'emailFeedback');
+            }
+            // Hide main error message when user starts typing
+            errorMessage.classList.remove('show');
+        });
+
+        // ===== REAL-TIME PASSWORD VALIDATION =====
+        passwordInput.addEventListener('blur', function() {
+            if (!this.value) {
+                showInputError(this, 'passwordFeedback', 'Password is required');
+            } else {
+                showInputSuccess(this, 'passwordFeedback');
+            }
+        });
+
+        passwordInput.addEventListener('input', function() {
+            if (this.classList.contains('error') && this.value) {
+                showInputSuccess(this, 'passwordFeedback');
+            }
+            // Hide main error message when user starts typing
+            errorMessage.classList.remove('show');
+        });
+
+        // ===== FORM SUBMISSION =====
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+
+            // Reset messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validate Email
+            if (!emailInput.value) {
+                showInputError(emailInput, 'emailFeedback', 'Email address is required');
+                isValid = false;
+            } else if (!validateEmail(emailInput.value)) {
+                showInputError(emailInput, 'emailFeedback', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            // Validate Password
+            if (!passwordInput.value) {
+                showInputError(passwordInput, 'passwordFeedback', 'Password is required');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                errorMessage.classList.add('show');
+                document.getElementById('errorText').textContent = 'Please fill in all required fields correctly.';
+                return;
+            }
+
+            // Show loading state
+            loginBtn.classList.add('loading');
+
+            // Process login after short delay for UX
+            setTimeout(function() {
+                // Get registered providers from localStorage
+                const providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+                
+                // Trim and lowercase the email for comparison
+                const enteredEmail = emailInput.value.toLowerCase().trim();
+                const enteredPassword = passwordInput.value;
+
+                // Find provider by email (case-insensitive)
+                const provider = providers.find(function(p) {
+                    return p.email.toLowerCase().trim() === enteredEmail;
+                });
+
+                // Check if email exists
+                if (!provider) {
+                    loginBtn.classList.remove('loading');
+                    errorMessage.classList.add('show');
+                    document.getElementById('errorText').textContent = 'No account found with this email address. Please register first.';
+                    showInputError(emailInput, 'emailFeedback', 'Email not registered');
+                    return;
+                }
+
+                // Check if password matches
+                if (provider.password !== enteredPassword) {
+                    loginBtn.classList.remove('loading');
+                    errorMessage.classList.add('show');
+                    document.getElementById('errorText').textContent = 'Incorrect password. Please try again.';
+                    showInputError(passwordInput, 'passwordFeedback', 'Incorrect password');
+                    return;
+                }
+
+                // ===== LOGIN SUCCESSFUL =====
+                loginBtn.classList.remove('loading');
+                
+                // Save logged-in provider to localStorage
+                localStorage.setItem('loggedInProvider', provider.email);
+                localStorage.setItem('loggedInProviderId', provider.id.toString());
+
+                // Show success message
+                successMessage.classList.add('show');
+                document.getElementById('successText').textContent = 'Login successful! Redirecting to dashboard...';
+
+                // Clear form
+                emailInput.classList.add('success');
+                passwordInput.classList.add('success');
+
+                // Redirect to provider dashboard after short delay
+                setTimeout(function() {
+                    window.location.href = 'provider-dashboard.html';
+                }, 1200);
+
+            }, 1000);
+        });
+
+        // ===== PREVENT FORM RESUBMISSION ON REFRESH =====
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        // ===== CONSOLE LOG =====
+        console.log('%c BloodAvail - Provider Login ', 'background: #27ae60; color: white; font-size: 14px; padding: 8px; border-radius: 4px;');
+        console.log('%c Login with registered provider credentials ', 'color: #666; font-size: 12px;');
+    </script>
+</body>
+</html>
