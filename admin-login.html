@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --primary-deeper: #a71d2a;
+            --accent-gold: #d4a017;
+            --accent-gold-dark: #b8860b;
+            --admin-dark: #1a1a2e;
+            --admin-darker: #16213e;
+            --admin-accent: #0f3460;
+            --admin-surface: #1e2a4a;
+            --light-red: #fff5f5;
+            --lighter-red: #ffe8e8;
+            --text-dark: #2c3e50;
+            --text-light: #8892a4;
+            --text-muted: #6b7b8d;
+            --white: #ffffff;
+            --off-white: #f8f9fc;
+            --error-red: #e74c3c;
+            --error-light: rgba(231, 76, 60, 0.1);
+            --success-green: #27ae60;
+            --success-light: rgba(39, 174, 96, 0.1);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-light: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.97);
+            --shadow-admin: 0 25px 80px rgba(26, 26, 46, 0.25);
+            --shadow-btn: 0 8px 30px rgba(220, 53, 69, 0.35);
+            --shadow-btn-hover: 0 12px 40px rgba(220, 53, 69, 0.5);
+            --shadow-input: 0 0 0 4px rgba(220, 53, 69, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: var(--admin-dark);
+            padding: 30px 20px;
+        }
+
+        /* ===== FULL BACKGROUND ===== */
+        .admin-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #1a1a2e 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== BACKGROUND PATTERN ===== */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--white) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, var(--white) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        /* ===== FLOATING ELEMENTS ===== */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .float-orb {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatOrb 20s infinite ease-in-out;
+        }
+
+        .float-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.08) 0%, transparent 70%);
+            top: -15%;
+            right: -10%;
+            animation-delay: 0s;
+        }
+
+        .float-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(15, 52, 96, 0.15) 0%, transparent 70%);
+            bottom: -10%;
+            left: -8%;
+            animation-delay: -5s;
+        }
+
+        .float-orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.06) 0%, transparent 70%);
+            top: 50%;
+            left: 15%;
+            animation-delay: -10s;
+        }
+
+        .float-orb:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(212, 160, 23, 0.05) 0%, transparent 70%);
+            top: 20%;
+            right: 20%;
+            animation-delay: -7s;
+        }
+
+        .float-orb:nth-child(5) {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            bottom: 30%;
+            right: 10%;
+            animation-delay: -12s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-25px, 35px) scale(0.95); }
+            75% { transform: translate(20px, 15px) scale(1.03); }
+        }
+
+        /* ===== SECURITY GRID LINES ===== */
+        .security-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .h-line {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.03), transparent);
+            animation: scanLine 8s infinite linear;
+        }
+
+        .h-line:nth-child(1) { top: 20%; animation-delay: 0s; }
+        .h-line:nth-child(2) { top: 50%; animation-delay: -3s; }
+        .h-line:nth-child(3) { top: 80%; animation-delay: -6s; }
+
+        @keyframes scanLine {
+            0% { opacity: 0; transform: translateX(-100%); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            animation: containerReveal 1s ease-out;
+        }
+
+        @keyframes containerReveal {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== ADMIN BADGE (Top) ===== */
+        .admin-top-badge {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .admin-top-badge .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-top-badge .badge-pill i {
+            font-size: 0.7rem;
+            color: var(--primary-red);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            animation: dotPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.7); }
+        }
+
+        /* ===== LOGIN CARD ===== */
+        .login-card {
+            background: var(--glass-bg);
+            border-radius: 28px;
+            padding: 55px 50px;
+            box-shadow: var(--shadow-admin);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, 
+                var(--primary-red), 
+                var(--primary-dark), 
+                var(--accent-gold),
+                var(--primary-dark),
+                var(--primary-red)
+            );
+            background-size: 300% 100%;
+            animation: topBarShimmer 4s infinite linear;
+        }
+
+        @keyframes topBarShimmer {
+            0% { background-position: 300% 0; }
+            100% { background-position: -300% 0; }
+        }
+
+        .login-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.2), transparent);
+        }
+
+        /* ===== CARD HEADER ===== */
+        .card-header {
+            text-align: center;
+            margin-bottom: 42px;
+        }
+
+        .admin-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            text-decoration: none;
+        }
+
+        .logo-icon-wrapper {
+            position: relative;
+        }
+
+        .logo-icon {
+            width: 62px;
+            height: 62px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.35);
+            animation: logoPulse 3s infinite ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(220, 53, 69, 0.35); }
+            50% { box-shadow: 0 10px 45px rgba(220, 53, 69, 0.55); }
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 28px;
+        }
+
+        .logo-shield {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--admin-dark), var(--admin-darker));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--white);
+            z-index: 3;
+        }
+
+        .logo-shield i {
+            font-size: 0.55rem;
+            color: var(--accent-gold);
+        }
+
+        .logo-text h1 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .card-header h2 {
+            font-size: 1.65rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .card-header p {
+            color: var(--text-light);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .admin-access-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.08), rgba(26, 26, 46, 0.03));
+            border: 1px solid rgba(26, 26, 46, 0.12);
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-top: 20px;
+            font-size: 0.82rem;
+            color: var(--admin-dark);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .admin-access-badge .shield-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--admin-dark), var(--admin-accent));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-access-badge .shield-icon i {
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+        }
+
+        /* ===== SECURITY NOTICE ===== */
+        .security-notice {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.05), rgba(15, 52, 96, 0.03));
+            border: 1px solid rgba(26, 26, 46, 0.08);
+            border-radius: 14px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.5s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .security-notice .notice-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--admin-dark), var(--admin-accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .security-notice .notice-icon i {
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+        }
+
+        .security-notice .notice-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .security-notice .notice-text strong {
+            color: var(--text-dark);
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(231, 76, 60, 0.04));
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            animation: messageShake 0.5s ease-out;
+        }
+
+        @keyframes messageShake {
+            0%, 100% { transform: translateX(0); }
+            15%, 45%, 75% { transform: translateX(-5px); }
+            30%, 60%, 90% { transform: translateX(5px); }
+        }
+
+        .message.error .msg-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(231, 76, 60, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.error .msg-icon i {
+            color: var(--error-red);
+            font-size: 1.1rem;
+        }
+
+        .message.error .msg-content {
+            flex: 1;
+        }
+
+        .message.error .msg-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--error-red);
+            margin-bottom: 2px;
+        }
+
+        .message.error .msg-text {
+            font-size: 0.8rem;
+            color: rgba(231, 76, 60, 0.8);
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.04));
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            animation: messageFade 0.4s ease-out;
+        }
+
+        @keyframes messageFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.success .msg-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(39, 174, 96, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.success .msg-icon i {
+            color: var(--success-green);
+            font-size: 1.1rem;
+        }
+
+        .message.success .msg-content {
+            flex: 1;
+        }
+
+        .message.success .msg-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--success-green);
+            margin-bottom: 2px;
+        }
+
+        .message.success .msg-text {
+            font-size: 0.8rem;
+            color: rgba(39, 174, 96, 0.8);
+        }
+
+        /* ===== LOGIN FORM ===== */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ===== FORM GROUP ===== */
+        .form-group {
+            position: relative;
+            animation: formFieldReveal 0.5s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.35s; }
+        .form-group:nth-child(2) { animation-delay: 0.45s; }
+
+        @keyframes formFieldReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .form-label .label-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-label .label-icon {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.04));
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-label .label-icon i {
+            font-size: 0.7rem;
+            color: var(--primary-red);
+        }
+
+        .form-label .required-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--primary-red);
+            border-radius: 50%;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 55px 18px 52px;
+            font-size: 0.98rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            outline: none;
+            letter-spacing: 0.2px;
+        }
+
+        .form-input::placeholder {
+            color: #b0b8c4;
+            font-weight: 400;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-red);
+            box-shadow: var(--shadow-input);
+            background: var(--white);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--primary-red);
+        }
+
+        /* Floating Label */
+        .floating-label {
+            position: absolute;
+            left: 52px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.98rem;
+            color: #b0b8c4;
+            pointer-events: none;
+            transition: var(--transition);
+            background: transparent;
+            padding: 0 6px;
+        }
+
+        .form-input:focus ~ .floating-label,
+        .form-input:not(:placeholder-shown) ~ .floating-label {
+            top: 0;
+            left: 14px;
+            font-size: 0.75rem;
+            color: var(--primary-red);
+            background: var(--white);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* Input Validation States */
+        .form-input.input-error {
+            border-color: var(--error-red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.08);
+        }
+
+        .form-input.input-error ~ .input-icon {
+            color: var(--error-red);
+        }
+
+        .form-input.input-error ~ .floating-label {
+            color: var(--error-red);
+        }
+
+        .form-input.input-success {
+            border-color: var(--success-green);
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.08);
+        }
+
+        .form-input.input-success ~ .input-icon {
+            color: var(--success-green);
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            z-index: 2;
+            border-radius: 6px;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-red);
+            background: rgba(220, 53, 69, 0.06);
+        }
+
+        /* Field Error */
+        .field-error {
+            font-size: 0.78rem;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding-left: 4px;
+            color: var(--error-red);
+        }
+
+        .field-error.show {
+            display: flex;
+        }
+
+        .field-error i {
+            font-size: 0.72rem;
+        }
+
+        /* ===== ATTEMPT COUNTER ===== */
+        .attempt-counter {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(243, 156, 18, 0.08);
+            border: 1px solid rgba(243, 156, 18, 0.15);
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 0.78rem;
+            color: #b8860b;
+            font-weight: 500;
+        }
+
+        .attempt-counter.show {
+            display: flex;
+            animation: messageFade 0.3s ease-out;
+        }
+
+        .attempt-counter i {
+            font-size: 0.85rem;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 12px;
+            animation: formFieldReveal 0.5s ease-out 0.55s backwards;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 19px 32px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark), var(--primary-deeper));
+            background-size: 200% 200%;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-btn);
+            letter-spacing: 0.3px;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: 0.7s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-btn-hover);
+            background-position: 100% 0;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .login-btn .btn-icon {
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover .btn-icon {
+            transform: translateX(4px);
+        }
+
+        /* Loading State */
+        .login-btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .login-btn.loading .btn-text,
+        .login-btn.loading .btn-icon {
+            opacity: 0;
+        }
+
+        .login-btn .spinner {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            display: none;
+        }
+
+        .login-btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Home Button */
+        .home-btn {
+            width: 100%;
+            padding: 16px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .home-btn i {
+            transition: var(--transition);
+        }
+
+        .home-btn:hover {
+            background: var(--off-white);
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .home-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        /* ===== CARD FOOTER ===== */
+        .card-footer {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .footer-security {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .security-item i {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .footer-copyright {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .footer-copyright p {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .footer-copyright .highlight {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        /* ===== BOTTOM DECORATIVE TEXT ===== */
+        .bottom-text {
+            text-align: center;
+            margin-top: 25px;
+            animation: fadeInUp 0.5s ease-out 0.7s backwards;
+        }
+
+        .bottom-text p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .bottom-text p i {
+            color: rgba(220, 53, 69, 0.5);
+            margin: 0 3px;
+        }
+
+        /* ===== SCROLL TO TOP BUTTON ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(220, 53, 69, 0.5);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 576px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .login-card {
+                padding: 42px 28px;
+                border-radius: 24px;
+            }
+
+            .admin-logo {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .logo-icon {
+                width: 56px;
+                height: 56px;
+            }
+
+            .logo-icon i {
+                font-size: 24px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.4rem;
+            }
+
+            .card-header h2 {
+                font-size: 1.45rem;
+            }
+
+            .card-header p {
+                font-size: 0.88rem;
+            }
+
+            .form-input {
+                padding: 16px 50px 16px 48px;
+                font-size: 0.95rem;
+            }
+
+            .input-icon {
+                left: 16px;
+                font-size: 1rem;
+            }
+
+            .floating-label {
+                left: 48px;
+                font-size: 0.95rem;
+            }
+
+            .password-toggle {
+                right: 14px;
+            }
+
+            .login-btn {
+                padding: 17px 28px;
+                font-size: 1rem;
+            }
+
+            .home-btn {
+                padding: 14px 24px;
+                font-size: 0.9rem;
+            }
+
+            .admin-access-badge {
+                padding: 10px 18px;
+                font-size: 0.78rem;
+            }
+
+            .security-notice {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .footer-security {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .scroll-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .login-card {
+                padding: 35px 22px;
+            }
+
+            .card-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .form-input {
+                padding: 14px 46px 14px 44px;
+            }
+
+            .login-btn {
+                padding: 16px 24px;
+            }
+
+            .home-btn {
+                padding: 13px 20px;
+            }
+
+            .admin-top-badge .badge-pill {
+                font-size: 0.72rem;
+                padding: 7px 16px;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        .form-input:focus-visible {
+            outline: 2px solid var(--primary-red);
+            outline-offset: 2px;
+        }
+
+        .login-btn:focus-visible,
+        .home-btn:focus-visible {
+            outline: 2px solid var(--primary-red);
+            outline-offset: 3px;
+        }
+
+        .password-toggle:focus-visible {
+            outline: 2px solid var(--primary-red);
+            outline-offset: 2px;
+        }
+
+        .scroll-top:focus-visible {
+            outline: 2px solid var(--white);
+            outline-offset: 3px;
+        }
+
+        /* ===== PRINT HIDDEN ===== */
+        @media print {
+            body { background: white; }
+            .admin-bg, .bg-pattern, .floating-elements, .security-lines, .scroll-top { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Full Background -->
+    <div class="admin-bg"></div>
+
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Floating Orbs -->
+    <div class="floating-elements">
+        <div class="float-orb"></div>
+        <div class="float-orb"></div>
+        <div class="float-orb"></div>
+        <div class="float-orb"></div>
+        <div class="float-orb"></div>
+    </div>
+
+    <!-- Security Scan Lines -->
+    <div class="security-lines">
+        <div class="h-line"></div>
+        <div class="h-line"></div>
+        <div class="h-line"></div>
+    </div>
+
+    <!-- Main Wrapper -->
+    <div class="login-wrapper" id="top">
+        <!-- Top Badge -->
+        <div class="admin-top-badge">
+            <div class="badge-pill">
+                <div class="badge-dot"></div>
+                <i class="fas fa-lock"></i>
+                <span>Restricted Admin Access</span>
+            </div>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Header -->
+            <div class="card-header">
+                <a href="index.html" class="admin-logo">
+                    <div class="logo-icon-wrapper">
+                        <div class="logo-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="logo-shield">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BloodAvail</h1>
+                        <span>Emergency Blood System</span>
+                    </div>
+                </a>
+
+                <h2>Admin Control Panel</h2>
+                <p>Authenticate to access the system dashboard</p>
+
+                <div class="admin-access-badge">
+                    <div class="shield-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span>System Administrator Login</span>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="security-notice">
+                <div class="notice-icon">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <div class="notice-text">
+                    <strong>Authorized Personnel Only.</strong> This portal is restricted to system administrators. All login attempts are monitored.
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="message error" id="errorMessage">
+                <div class="msg-icon">
+                    <i class="fas fa-shield-xmark"></i>
+                </div>
+                <div class="msg-content">
+                    <div class="msg-title" id="errorTitle">Authentication Failed</div>
+                    <div class="msg-text" id="errorText">Invalid credentials. Please verify and try again.</div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="message success" id="successMessage">
+                <div class="msg-icon">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <div class="msg-content">
+                    <div class="msg-title">Access Granted</div>
+                    <div class="msg-text" id="successText">Authentication successful. Redirecting to dashboard...</div>
+                </div>
+            </div>
+
+            <!-- Attempt Counter -->
+            <div class="attempt-counter" id="attemptCounter">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="attemptText">3 login attempts remaining</span>
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form" id="adminLoginForm" novalidate>
+                <!-- Email Field -->
+                <div class="form-group">
+                    <div class="form-label">
+                        <div class="label-left">
+                            <span class="label-icon"><i class="fas fa-envelope"></i></span>
+                            Admin Email
+                        </div>
+                        <div class="required-dot"></div>
+                    </div>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            id="adminEmail" 
+                            name="adminEmail"
+                            placeholder=" "
+                            required
+                            autocomplete="email"
+                            spellcheck="false"
+                        >
+                        <i class="fas fa-envelope input-icon"></i>
+                        <label class="floating-label" for="adminEmail">Enter admin email address</label>
+                    </div>
+                    <div class="field-error" id="emailError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="emailErrorText">Please enter a valid email address</span>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <div class="form-label">
+                        <div class="label-left">
+                            <span class="label-icon"><i class="fas fa-lock"></i></span>
+                            Admin Password
+                        </div>
+                        <div class="required-dot"></div>
+                    </div>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            id="adminPassword" 
+                            name="adminPassword"
+                            placeholder=" "
+                            required
+                            autocomplete="current-password"
+                        >
+                        <i class="fas fa-key input-icon"></i>
+                        <label class="floating-label" for="adminPassword">Enter admin password</label>
+                        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="field-error" id="passwordError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="passwordErrorText">Password is required</span>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <i class="fas fa-right-to-bracket btn-icon"></i>
+                        <span class="btn-text">Authenticate & Login</span>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <a href="index.html" class="home-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Footer -->
+            <div class="card-footer">
+                <div class="footer-security">
+                    <div class="security-item">
+                        <i class="fas fa-lock"></i>
+                        <span>256-bit Encryption</span>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-shield-halved"></i>
+                        <span>Secure Session</span>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin Only</span>
+                    </div>
+                </div>
+                <div class="footer-copyright">
+                    <p>
+                        <span class="highlight">BloodAvail</span> – Emergency Blood Availability System
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Text -->
+        <div class="bottom-text">
+            <p>
+                <i class="fas fa-shield-halved"></i>
+                Protected by BloodAvail Security Protocol
+            </p>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // ============================================================
+        // BLOODAVAIL – ADMIN LOGIN CONTROLLER
+        // ============================================================
+
+        // ===== HARDCODED ADMIN CREDENTIALS =====
+        const ADMIN_CREDENTIALS = Object.freeze({
+            email: 'bloodavail@hotmail.com',
+            password: 'BloodAvail@1437'
+        });
+
+        // ===== SESSION KEYS =====
+        const SESSION_KEYS = Object.freeze({
+            isLoggedIn: 'adminLoggedIn',
+            loginTime: 'adminLoginTime',
+            sessionToken: 'adminSessionToken'
+        });
+
+        // ===== LOGIN ATTEMPT TRACKING =====
+        const MAX_ATTEMPTS = 5;
+        let loginAttempts = 0;
+        let isLocked = false;
+        let lockoutTimer = null;
+
+        // ===== DOM ELEMENTS =====
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const emailInput = document.getElementById('adminEmail');
+        const passwordInput = document.getElementById('adminPassword');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const attemptCounter = document.getElementById('attemptCounter');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const scrollTopBtn = document.getElementById('scrollTop');
+
+        // ===== CHECK IF ALREADY LOGGED IN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAdminLoggedIn = localStorage.getItem(SESSION_KEYS.isLoggedIn);
+            const sessionToken = localStorage.getItem(SESSION_KEYS.sessionToken);
+
+            if (isAdminLoggedIn === 'true' && sessionToken) {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
+            // Restore attempt count from sessionStorage
+            const storedAttempts = sessionStorage.getItem('adminLoginAttempts');
+            if (storedAttempts) {
+                loginAttempts = parseInt(storedAttempts);
+                if (loginAttempts >= MAX_ATTEMPTS) {
+                    activateLockout();
+                } else if (loginAttempts >= 2) {
+                    updateAttemptCounter();
+                }
+            }
+        });
+
+        // ===== SCROLL TO TOP BUTTON VISIBILITY =====
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        // ===== SCROLL TO TOP FUNCTION =====
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== SCROLL ANIMATION OBSERVER =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const scrollObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animation
+        document.querySelectorAll('.login-card, .admin-top-badge, .bottom-text, .security-notice, .form-group, .button-group').forEach(function(el, index) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease ' + (index * 0.08) + 's, transform 0.6s ease ' + (index * 0.08) + 's';
+            scrollObserver.observe(el);
+        });
+
+        // ===== EMAIL VALIDATION =====
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // ===== SHOW FIELD ERROR =====
+        function showFieldError(input, errorEl, errorTextEl, message) {
+            input.classList.add('input-error');
+            input.classList.remove('input-success');
+            errorTextEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+
+        // ===== CLEAR FIELD ERROR =====
+        function clearFieldError(input, errorEl) {
+            input.classList.remove('input-error');
+            errorEl.classList.remove('show');
+        }
+
+        // ===== SHOW FIELD SUCCESS =====
+        function showFieldSuccess(input, errorEl) {
+            input.classList.remove('input-error');
+            input.classList.add('input-success');
+            errorEl.classList.remove('show');
+        }
+
+        // ===== REAL-TIME EMAIL VALIDATION =====
+        emailInput.addEventListener('blur', function() {
+            if (this.value && !validateEmail(this.value)) {
+                showFieldError(this, emailError, document.getElementById('emailErrorText'), 'Please enter a valid email address');
+            } else if (this.value && validateEmail(this.value)) {
+                showFieldSuccess(this, emailError);
+            } else if (!this.value) {
+                showFieldError(this, emailError, document.getElementById('emailErrorText'), 'Admin email address is required');
+            }
+        });
+
+        emailInput.addEventListener('input', function() {
+            if (this.classList.contains('input-error') && validateEmail(this.value)) {
+                showFieldSuccess(this, emailError);
+            }
+            hideMessages();
+        });
+
+        // ===== REAL-TIME PASSWORD VALIDATION =====
+        passwordInput.addEventListener('blur', function() {
+            if (!this.value) {
+                showFieldError(this, passwordError, document.getElementById('passwordErrorText'), 'Admin password is required');
+            } else {
+                showFieldSuccess(this, passwordError);
+            }
+        });
+
+        passwordInput.addEventListener('input', function() {
+            if (this.classList.contains('input-error') && this.value) {
+                showFieldSuccess(this, passwordError);
+            }
+            hideMessages();
+        });
+
+        // ===== TOGGLE PASSWORD VISIBILITY =====
+        passwordToggle.addEventListener('click', function() {
+            var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            var icon = this.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // ===== HIDE MESSAGES =====
+        function hideMessages() {
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // ===== UPDATE ATTEMPT COUNTER =====
+        function updateAttemptCounter() {
+            var remaining = MAX_ATTEMPTS - loginAttempts;
+            if (remaining <= 3 && remaining > 0) {
+                attemptCounter.classList.add('show');
+                document.getElementById('attemptText').textContent = 
+                    remaining + ' login attempt' + (remaining !== 1 ? 's' : '') + ' remaining before temporary lockout';
+            }
+        }
+
+        // ===== ACTIVATE LOCKOUT =====
+        function activateLockout() {
+            isLocked = true;
+            loginBtn.disabled = true;
+            loginBtn.style.opacity = '0.5';
+            loginBtn.style.cursor = 'not-allowed';
+
+            var lockSeconds = 30;
+            attemptCounter.classList.add('show');
+
+            function updateLockTimer() {
+                document.getElementById('attemptText').textContent = 
+                    'Too many failed attempts. Please wait ' + lockSeconds + ' seconds...';
+                
+                if (lockSeconds <= 0) {
+                    clearInterval(lockoutTimer);
+                    isLocked = false;
+                    loginAttempts = 0;
+                    sessionStorage.setItem('adminLoginAttempts', '0');
+                    loginBtn.disabled = false;
+                    loginBtn.style.opacity = '1';
+                    loginBtn.style.cursor = 'pointer';
+                    attemptCounter.classList.remove('show');
+                    return;
+                }
+                lockSeconds--;
+            }
+
+            updateLockTimer();
+            lockoutTimer = setInterval(updateLockTimer, 1000);
+        }
+
+        // ===== GENERATE SESSION TOKEN =====
+        function generateSessionToken() {
+            var timestamp = Date.now().toString(36);
+            var random = Math.random().toString(36).substring(2, 15);
+            return 'admin_' + timestamp + '_' + random;
+        }
+
+        // ===== FORM SUBMISSION =====
+        adminLoginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Check lockout
+            if (isLocked) {
+                return;
+            }
+
+            var isValid = true;
+
+            // Hide existing messages
+            hideMessages();
+
+            // Validate Email
+            if (!emailInput.value.trim()) {
+                showFieldError(emailInput, emailError, document.getElementById('emailErrorText'), 'Admin email address is required');
+                isValid = false;
+            } else if (!validateEmail(emailInput.value)) {
+                showFieldError(emailInput, emailError, document.getElementById('emailErrorText'), 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            // Validate Password
+            if (!passwordInput.value) {
+                showFieldError(passwordInput, passwordError, document.getElementById('passwordErrorText'), 'Admin password is required');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                showError('Incomplete Form', 'Please fill in all required fields correctly.');
+
+                // Smooth scroll to error message
+                setTimeout(function() {
+                    var errorEl = document.getElementById('errorMessage');
+                    if (errorEl) {
+                        errorEl.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                }, 100);
+
+                return;
+            }
+
+            // Show loading state
+            loginBtn.classList.add('loading');
+
+            // Authenticate after processing delay
+            setTimeout(function() {
+                var enteredEmail = emailInput.value.toLowerCase().trim();
+                var enteredPassword = passwordInput.value;
+
+                // ===== CREDENTIAL VERIFICATION =====
+                var emailMatch = enteredEmail === ADMIN_CREDENTIALS.email.toLowerCase();
+                var passwordMatch = enteredPassword === ADMIN_CREDENTIALS.password;
+
+                if (!emailMatch || !passwordMatch) {
+                    // ===== AUTHENTICATION FAILED =====
+                    loginBtn.classList.remove('loading');
+
+                    loginAttempts++;
+                    sessionStorage.setItem('adminLoginAttempts', loginAttempts.toString());
+
+                    // Determine error message
+                    if (!emailMatch && !passwordMatch) {
+                        showError('Authentication Failed', 'The email and password provided are incorrect.');
+                    } else if (!emailMatch) {
+                        showError('Authentication Failed', 'The email address is not recognized as an admin account.');
+                    } else {
+                        showError('Authentication Failed', 'The password entered is incorrect. Please try again.');
+                    }
+
+                    // Mark fields with errors
+                    if (!emailMatch) {
+                        showFieldError(emailInput, emailError, document.getElementById('emailErrorText'), 'Email not recognized');
+                    }
+                    if (!passwordMatch) {
+                        showFieldError(passwordInput, passwordError, document.getElementById('passwordErrorText'), 'Incorrect password');
+                    }
+
+                    // Smooth scroll to error message
+                    setTimeout(function() {
+                        var errorEl = document.getElementById('errorMessage');
+                        if (errorEl) {
+                            errorEl.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    }, 100);
+
+                    // Update attempt counter
+                    if (loginAttempts >= MAX_ATTEMPTS) {
+                        activateLockout();
+                    } else {
+                        updateAttemptCounter();
+                    }
+
+                    return;
+                }
+
+                // ===== AUTHENTICATION SUCCESSFUL =====
+                loginBtn.classList.remove('loading');
+
+                // Reset attempts
+                loginAttempts = 0;
+                sessionStorage.removeItem('adminLoginAttempts');
+                attemptCounter.classList.remove('show');
+
+                // Generate session token
+                var sessionToken = generateSessionToken();
+
+                // Save admin session to localStorage
+                localStorage.setItem(SESSION_KEYS.isLoggedIn, 'true');
+                localStorage.setItem(SESSION_KEYS.loginTime, new Date().toISOString());
+                localStorage.setItem(SESSION_KEYS.sessionToken, sessionToken);
+
+                // Show success
+                successMessage.classList.add('show');
+
+                // Smooth scroll to success message
+                setTimeout(function() {
+                    var successEl = document.getElementById('successMessage');
+                    if (successEl) {
+                        successEl.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                }, 100);
+
+                // Mark inputs as success
+                emailInput.classList.add('input-success');
+                passwordInput.classList.add('input-success');
+
+                // Disable form
+                emailInput.setAttribute('disabled', true);
+                passwordInput.setAttribute('disabled', true);
+                loginBtn.disabled = true;
+
+                // Redirect to Admin Dashboard
+                setTimeout(function() {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1500);
+
+            }, 1200);
+        });
+
+        // ===== SHOW ERROR HELPER =====
+        function showError(title, text) {
+            document.getElementById('errorTitle').textContent = title;
+            document.getElementById('errorText').textContent = text;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+        }
+
+        // ===== PREVENT FORM RESUBMISSION ON REFRESH =====
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        // ===== CONSOLE BRANDING =====
+        console.log(
+            '%c BloodAvail – Admin Portal ',
+            'background: linear-gradient(135deg, #dc3545, #a71d2a); color: white; font-size: 14px; padding: 10px 20px; border-radius: 6px; font-weight: bold;'
+        );
+        console.log(
+            '%c⚠ Restricted Access – Authorized administrators only ',
+            'color: #b8860b; font-size: 11px; padding: 4px;'
+        );
+    </script>
+</body>
+</html>

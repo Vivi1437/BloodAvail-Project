@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – BloodAvail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-red: #dc3545;
+            --primary-dark: #c82333;
+            --primary-deeper: #a71d2a;
+            --accent-gold: #d4a017;
+            --accent-gold-dark: #b8860b;
+            --accent-blue: #3498db;
+            --accent-blue-dark: #2980b9;
+            --accent-green: #27ae60;
+            --accent-green-dark: #1e8449;
+            --accent-purple: #9b59b6;
+            --accent-purple-dark: #8e44ad;
+            --accent-orange: #e67e22;
+            --accent-teal: #1abc9c;
+            --admin-dark: #1a1a2e;
+            --admin-darker: #16213e;
+            --admin-accent: #0f3460;
+            --sidebar-dark: #0d1b2a;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --text-muted: #999;
+            --text-white: #ffffff;
+            --white: #ffffff;
+            --off-white: #f8f9fc;
+            --bg-light: #f0f2f5;
+            --bg-card: #ffffff;
+            --border-color: #e8ecf1;
+            --border-light: #f0f0f0;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 9999;
+        }
+
+        .loading-screen.hide {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(220, 53, 69, 0.15);
+            border-top-color: var(--primary-red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* ===== HEADER / TOP NAVBAR ===== */
+        .admin-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            position: relative;
+        }
+
+        .logo-icon i {
+            color: var(--white);
+            font-size: 20px;
+        }
+
+        .logo-icon .admin-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            border: 2px solid var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon .admin-dot i {
+            font-size: 0.4rem;
+            color: var(--admin-dark);
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 35px;
+            background: var(--border-color);
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.06), rgba(26, 26, 46, 0.02));
+            border: 1px solid rgba(26, 26, 46, 0.08);
+            padding: 7px 16px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--admin-dark);
+        }
+
+        .header-badge .badge-icon {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--admin-dark), var(--admin-accent));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-badge .badge-icon i {
+            font-size: 0.6rem;
+            color: var(--accent-gold);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px;
+            background: rgba(220, 53, 69, 0.06);
+            border-radius: 50px;
+            border: 1px solid rgba(220, 53, 69, 0.1);
+        }
+
+        .admin-avatar {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, var(--admin-dark), var(--admin-accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-avatar i {
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .admin-role {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .refresh-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--off-white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .refresh-btn:hover {
+            background: var(--primary-red);
+            color: var(--white);
+            border-color: var(--primary-red);
+        }
+
+        .refresh-btn:hover i {
+            animation: spin 0.8s linear;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: none;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 30px 80px;
+        }
+
+        /* ===== WELCOME BAR ===== */
+        .welcome-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-text h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .welcome-text h2 span {
+            color: var(--primary-red);
+        }
+
+        .welcome-text p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .welcome-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            background: var(--white);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-item i {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .meta-item .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: livePulse 2s infinite ease-in-out;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(39, 174, 96, 0); }
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.15s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:nth-child(4) { animation-delay: 0.25s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-card-hover);
+            border-color: transparent;
+        }
+
+        .stat-card.hospitals::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-green-dark)); }
+        .stat-card.seekers::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-dark)); }
+        .stat-card.units::before { background: linear-gradient(90deg, var(--primary-red), var(--primary-dark)); }
+        .stat-card.cities::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-purple-dark)); }
+
+        .stat-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-info .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .stat-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-card.hospitals .stat-icon-box { background: rgba(39, 174, 96, 0.12); }
+        .stat-card.seekers .stat-icon-box { background: rgba(52, 152, 219, 0.12); }
+        .stat-card.units .stat-icon-box { background: rgba(220, 53, 69, 0.12); }
+        .stat-card.cities .stat-icon-box { background: rgba(155, 89, 182, 0.12); }
+
+        .stat-icon-box i {
+            font-size: 1.4rem;
+        }
+
+        .stat-card.hospitals .stat-icon-box i { color: var(--accent-green); }
+        .stat-card.seekers .stat-icon-box i { color: var(--accent-blue); }
+        .stat-card.units .stat-icon-box i { color: var(--primary-red); }
+        .stat-card.cities .stat-icon-box i { color: var(--accent-purple); }
+
+        .stat-footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .stat-footer i {
+            font-size: 0.75rem;
+        }
+
+        /* ===== SECTION STYLES ===== */
+        .dashboard-section {
+            margin-bottom: 30px;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .title-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title .title-icon i {
+            font-size: 1.1rem;
+            color: var(--white);
+        }
+
+        .section-title h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .section-title h3 small {
+            font-size: 0.78rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        .section-count {
+            padding: 6px 16px;
+            background: var(--off-white);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== CHARTS ROW ===== */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            animation: fadeInUp 0.5s ease-out 0.3s backwards;
+        }
+
+        .chart-card .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .chart-card .chart-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-card .chart-title .ct-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-card .chart-title .ct-icon i {
+            font-size: 1rem;
+            color: var(--white);
+        }
+
+        .chart-card .chart-title h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .chart-card .chart-title h4 small {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        /* ===== BAR CHART (Blood Group Distribution) ===== */
+        .bar-chart-container {
+            padding: 10px 0;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 220px;
+            gap: 12px;
+            padding: 0 5px;
+        }
+
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .bar-fill {
+            width: 100%;
+            max-width: 45px;
+            border-radius: 8px 8px 4px 4px;
+            background: linear-gradient(180deg, var(--primary-red), var(--primary-dark));
+            min-height: 4px;
+            transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .bar-fill:hover {
+            opacity: 0.85;
+            transform: scaleY(1.02);
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ===== DONUT CHART (City Distribution) ===== */
+        .donut-chart-area {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .donut-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            flex-shrink: 0;
+        }
+
+        .donut-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .donut-svg circle {
+            fill: none;
+            stroke-width: 20;
+            cx: 90;
+            cy: 90;
+            r: 70;
+        }
+
+        .donut-bg {
+            stroke: var(--border-light);
+        }
+
+        .donut-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-center-text .donut-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .donut-center-text .donut-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .donut-legend {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--off-white);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .legend-item:hover {
+            background: var(--border-light);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-name {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .legend-value {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* ===== DATA TABLE CARD ===== */
+        .table-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .table-card-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-card-header .tc-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-card-header .tc-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .table-card-header .tc-icon i {
+            font-size: 1rem;
+            color: var(--white);
+        }
+
+        .table-card-header h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .table-card-header h4 small {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .table-card-header .tc-count {
+            padding: 5px 14px;
+            background: var(--off-white);
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== TABLE STYLES ===== */
+        .data-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead th {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--off-white);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .data-table tbody tr {
+            transition: var(--transition);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .data-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(220, 53, 69, 0.02);
+        }
+
+        .data-table tbody td {
+            padding: 14px 20px;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .table-rank {
+            width: 32px;
+            height: 32px;
+            background: var(--off-white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .table-hospital {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-hospital-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .table-hospital-icon i {
+            color: var(--accent-green);
+            font-size: 0.95rem;
+        }
+
+        .table-hospital-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .table-city {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-city i {
+            color: var(--accent-blue);
+            font-size: 0.8rem;
+        }
+
+        .table-units-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .table-units-badge.high {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--accent-green);
+        }
+
+        .table-units-badge.medium {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .table-units-badge.low {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-red);
+        }
+
+        .table-groups-count {
+            font-weight: 600;
+            color: var(--accent-purple);
+        }
+
+        /* Seeker Table */
+        .table-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-user-avatar {
+            width: 36px;
+            height: 36px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .table-user-avatar i {
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+        }
+
+        .table-user-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .table-email {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .table-phone {
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .table-date {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-state .empty-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--off-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+        }
+
+        .empty-state .empty-icon i {
+            font-size: 1.8rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h4 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== CITY TABLE ===== */
+        .city-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .city-bar-fill {
+            flex: 1;
+            height: 8px;
+            background: var(--off-white);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .city-bar-fill .fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-purple-dark));
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .city-bar-value {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            min-width: 45px;
+            text-align: right;
+        }
+
+        /* ===== FOOTER ===== */
+        .admin-footer {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 30px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-footer p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .admin-footer .highlight {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        /* ===== LOGOUT MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .modal-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+        }
+
+        .modal-box h3 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .modal-box p {
+            font-size: 0.92rem;
+            color: var(--text-light);
+            margin-bottom: 28px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .modal-btn.cancel {
+            background: var(--off-white);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn.cancel:hover {
+            background: var(--border-color);
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.35);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 500;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(220, 53, 69, 0.45);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 15px;
+                height: 65px;
+            }
+
+            .header-badge {
+                display: none;
+            }
+
+            .header-divider {
+                display: none;
+            }
+
+            .admin-name {
+                display: none;
+            }
+
+            .admin-role {
+                display: none;
+            }
+
+            .logout-btn span {
+                display: none;
+            }
+
+            .logout-btn {
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            .main-content {
+                padding: 20px 15px 60px;
+            }
+
+            .welcome-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .welcome-text h2 {
+                font-size: 1.3rem;
+            }
+
+            .welcome-meta {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 22px 18px;
+            }
+
+            .stat-info .stat-value {
+                font-size: 1.7rem;
+            }
+
+            .donut-chart-area {
+                flex-direction: column;
+            }
+
+            .bar-chart {
+                height: 180px;
+            }
+
+            .data-table thead th,
+            .data-table tbody td {
+                padding: 12px 14px;
+                font-size: 0.82rem;
+            }
+
+            .admin-footer {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px 15px;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card-top {
+                flex-direction: row-reverse;
+            }
+
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+
+            .welcome-text h2 {
+                font-size: 1.15rem;
+            }
+
+            .chart-card {
+                padding: 20px 16px;
+            }
+
+            .bar-chart {
+                height: 160px;
+                gap: 6px;
+            }
+
+            .bar-fill {
+                max-width: 32px;
+            }
+
+            .donut-wrapper {
+                width: 150px;
+                height: 150px;
+            }
+
+            .scroll-top {
+                bottom: 20px;
+                right: 20px;
+                width: 44px;
+                height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Admin Dashboard...</p>
+    </div>
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="index.html" class="admin-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-tint"></i>
+                        <div class="admin-dot">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BloodAvail</h1>
+                        <span>Emergency Blood System</span>
+                    </div>
+                </a>
+                <div class="header-divider"></div>
+                <div class="header-badge">
+                    <div class="badge-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span>Admin Dashboard</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="admin-info">
+                    <div class="admin-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <span class="admin-name">Administrator</span>
+                        <span class="admin-role">System Admin</span>
+                    </div>
+                </div>
+                <button class="refresh-btn" onclick="refreshDashboard()" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="logout-btn" onclick="showLogoutModal()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Bar -->
+        <div class="welcome-bar">
+            <div class="welcome-text">
+                <h2>System <span>Overview</span></h2>
+                <p>Real-time monitoring of BloodAvail system data</p>
+            </div>
+            <div class="welcome-meta">
+                <div class="meta-item">
+                    <div class="live-dot"></div>
+                    <span>Live Data</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="currentDateTime">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card hospitals">
+                <div class="stat-card-top">
+                    <div class="stat-info">
+                        <div class="stat-label">Total Providers</div>
+                        <div class="stat-value" id="statProviders">0</div>
+                    </div>
+                    <div class="stat-icon-box">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                </div>
+                <div class="stat-footer">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Hospitals & Blood Banks</span>
+                </div>
+            </div>
+
+            <div class="stat-card seekers">
+                <div class="stat-card-top">
+                    <div class="stat-info">
+                        <div class="stat-label">Total Seekers</div>
+                        <div class="stat-value" id="statSeekers">0</div>
+                    </div>
+                    <div class="stat-icon-box">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-footer">
+                    <i class="fas fa-user-injured"></i>
+                    <span>Registered Blood Seekers</span>
+                </div>
+            </div>
+
+            <div class="stat-card units">
+                <div class="stat-card-top">
+                    <div class="stat-info">
+                        <div class="stat-label">Total Blood Units</div>
+                        <div class="stat-value" id="statUnits">0</div>
+                    </div>
+                    <div class="stat-icon-box">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                </div>
+                <div class="stat-footer">
+                    <i class="fas fa-boxes-stacked"></i>
+                    <span>Across All Providers</span>
+                </div>
+            </div>
+
+            <div class="stat-card cities">
+                <div class="stat-card-top">
+                    <div class="stat-info">
+                        <div class="stat-label">Cities Covered</div>
+                        <div class="stat-value" id="statCities">0</div>
+                    </div>
+                    <div class="stat-icon-box">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                </div>
+                <div class="stat-footer">
+                    <i class="fas fa-city"></i>
+                    <span>Unique Provider Locations</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+            <!-- Blood Group Distribution -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <div class="ct-icon" style="background: linear-gradient(135deg, var(--primary-red), var(--primary-dark));">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <h4>Blood Group Distribution <small>Units per blood group</small></h4>
+                    </div>
+                </div>
+                <div class="bar-chart-container">
+                    <div class="bar-chart" id="bloodGroupChart">
+                        <!-- Bars rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- City-Wise Distribution -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <div class="ct-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-dark));">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h4>City-Wise Coverage <small>Provider distribution by city</small></h4>
+                    </div>
+                </div>
+                <div class="donut-chart-area" id="cityChartArea">
+                    <!-- Donut chart rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Location-Wise Blood Availability -->
+        <div class="dashboard-section" style="animation-delay: 0.35s;">
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div class="tc-title">
+                        <div class="tc-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-dark));">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <h4>Location-Wise Blood Availability <small>City-wise total blood units</small></h4>
+                    </div>
+                    <span class="tc-count" id="cityTableCount">0 Cities</span>
+                </div>
+                <div class="data-table-wrapper">
+                    <table class="data-table" id="cityTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>City</th>
+                                <th>Providers</th>
+                                <th>Total Units</th>
+                                <th>Distribution</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cityTableBody">
+                        </tbody>
+                    </table>
+                    <div class="empty-state" id="cityEmptyState" style="display:none;">
+                        <div class="empty-icon"><i class="fas fa-city"></i></div>
+                        <h4>No City Data</h4>
+                        <p>No providers have registered yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Provider Overview -->
+        <div class="dashboard-section" style="animation-delay: 0.4s;">
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div class="tc-title">
+                        <div class="tc-icon" style="background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));">
+                            <i class="fas fa-hospital-alt"></i>
+                        </div>
+                        <h4>Provider Overview <small>All registered hospitals & blood banks</small></h4>
+                    </div>
+                    <span class="tc-count" id="providerTableCount">0 Providers</span>
+                </div>
+                <div class="data-table-wrapper">
+                    <table class="data-table" id="providerTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Hospital / Blood Bank</th>
+                                <th>City</th>
+                                <th>Blood Groups</th>
+                                <th>Total Units</th>
+                                <th>Registered</th>
+                            </tr>
+                        </thead>
+                        <tbody id="providerTableBody">
+                        </tbody>
+                    </table>
+                    <div class="empty-state" id="providerEmptyState" style="display:none;">
+                        <div class="empty-icon"><i class="fas fa-hospital"></i></div>
+                        <h4>No Providers Yet</h4>
+                        <p>No blood providers have registered in the system.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Overview -->
+        <div class="dashboard-section" style="animation-delay: 0.45s;">
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div class="tc-title">
+                        <div class="tc-icon" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>User Overview <small>All registered blood seekers</small></h4>
+                    </div>
+                    <span class="tc-count" id="seekerTableCount">0 Seekers</span>
+                </div>
+                <div class="data-table-wrapper">
+                    <table class="data-table" id="seekerTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Registered</th>
+                            </tr>
+                        </thead>
+                        <tbody id="seekerTableBody">
+                        </tbody>
+                    </table>
+                    <div class="empty-state" id="seekerEmptyState" style="display:none;">
+                        <div class="empty-icon"><i class="fas fa-users"></i></div>
+                        <h4>No Users Yet</h4>
+                        <p>No blood seekers have registered in the system.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="admin-footer">
+        <p><span class="highlight">BloodAvail</span> – Admin Control Panel</p>
+        <div class="footer-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="admin-login.html"><i class="fas fa-lock"></i> Admin Login</a>
+        </div>
+    </footer>
+
+    <!-- Logout Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to logout from the admin panel? You will need to authenticate again.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="hideLogoutModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="performLogout()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // ============================================================
+        // BLOODAVAIL – ADMIN DASHBOARD CONTROLLER
+        // ============================================================
+
+        // ===== SESSION KEYS =====
+        var SESSION_KEYS = {
+            isLoggedIn: 'adminLoggedIn',
+            loginTime: 'adminLoginTime',
+            sessionToken: 'adminSessionToken'
+        };
+
+        // ===== DONUT CHART COLORS =====
+        var CHART_COLORS = [
+            '#dc3545', '#3498db', '#27ae60', '#9b59b6',
+            '#e67e22', '#1abc9c', '#f39c12', '#e74c3c',
+            '#2ecc71', '#8e44ad', '#d35400', '#16a085'
+        ];
+
+        // ===== DOM ELEMENTS =====
+        var loadingScreen = document.getElementById('loadingScreen');
+        var scrollTopBtn = document.getElementById('scrollTop');
+
+        // ===== CHECK ADMIN AUTHENTICATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var isLoggedIn = localStorage.getItem(SESSION_KEYS.isLoggedIn);
+                var sessionToken = localStorage.getItem(SESSION_KEYS.sessionToken);
+
+                if (isLoggedIn !== 'true' || !sessionToken) {
+                    window.location.href = 'admin-login.html';
+                    return;
+                }
+
+                // Load dashboard data
+                loadDashboardData();
+
+                // Update date/time
+                updateDateTime();
+                setInterval(updateDateTime, 60000);
+
+                // Hide loading
+                loadingScreen.classList.add('hide');
+
+            }, 800);
+        });
+
+        // ===== UPDATE DATE TIME =====
+        function updateDateTime() {
+            var now = new Date();
+            var options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('currentDateTime').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // ===== NORMALIZE CITY =====
+        function normalizeCity(city) {
+            if (!city) return '';
+            return city.trim().replace(/\s+/g, ' ').toLowerCase();
+        }
+
+        // ===== FORMAT DATE =====
+        function formatDate(dateStr) {
+            if (!dateStr) return '--';
+            var d = new Date(dateStr);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // ===== ESCAPE HTML =====
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== LOAD DASHBOARD DATA =====
+        function loadDashboardData() {
+            var providers = JSON.parse(localStorage.getItem('bloodProviders')) || [];
+            var seekers = JSON.parse(localStorage.getItem('bloodSeekers')) || [];
+
+            // ===== CALCULATE STATS =====
+            var totalProviders = providers.length;
+            var totalSeekers = seekers.length;
+
+            var totalUnits = 0;
+            var bloodGroupTotals = {};
+            var cityData = {};
+
+            // Process each provider
+            providers.forEach(function(provider) {
+                var providerCity = provider.city ? provider.city.trim() : 'Unknown';
+                var normalizedProvCity = normalizeCity(providerCity);
+                var providerUnits = 0;
+
+                // Process blood stock
+                var stock = provider.bloodStock || [];
+                stock.forEach(function(s) {
+                    var units = parseInt(s.units) || 0;
+                    totalUnits += units;
+                    providerUnits += units;
+
+                    // Blood group totals
+                    if (!bloodGroupTotals[s.bloodGroup]) {
+                        bloodGroupTotals[s.bloodGroup] = 0;
+                    }
+                    bloodGroupTotals[s.bloodGroup] += units;
+                });
+
+                // City data
+                if (!cityData[normalizedProvCity]) {
+                    cityData[normalizedProvCity] = {
+                        display: providerCity,
+                        providers: 0,
+                        units: 0
+                    };
+                }
+                cityData[normalizedProvCity].providers++;
+                cityData[normalizedProvCity].units += providerUnits;
+            });
+
+            var totalCities = Object.keys(cityData).length;
+
+            // ===== UPDATE STAT CARDS =====
+            animateValue('statProviders', totalProviders);
+            animateValue('statSeekers', totalSeekers);
+            animateValue('statUnits', totalUnits);
+            animateValue('statCities', totalCities);
+
+            // ===== RENDER CHARTS =====
+            renderBloodGroupChart(bloodGroupTotals);
+            renderCityDonutChart(cityData);
+
+            // ===== RENDER TABLES =====
+            renderCityTable(cityData);
+            renderProviderTable(providers);
+            renderSeekerTable(seekers);
+        }
+
+        // ===== ANIMATE COUNTER VALUE =====
+        function animateValue(elementId, endValue) {
+            var el = document.getElementById(elementId);
+            var duration = 1200;
+            var startTime = null;
+            var startVal = 0;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var progress = Math.min((timestamp - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(eased * endValue);
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    el.textContent = endValue;
+                }
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        // ===== RENDER BLOOD GROUP BAR CHART =====
+        function renderBloodGroupChart(groupTotals) {
+            var container = document.getElementById('bloodGroupChart');
+            var allGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+            var maxVal = 0;
+
+            allGroups.forEach(function(g) {
+                var val = groupTotals[g] || 0;
+                if (val > maxVal) maxVal = val;
+            });
+
+            if (maxVal === 0) maxVal = 1;
+
+            var html = '';
+            allGroups.forEach(function(group) {
+                var val = groupTotals[group] || 0;
+                var heightPercent = (val / maxVal) * 85;
+                if (val > 0 && heightPercent < 5) heightPercent = 5;
+
+                html += '<div class="bar-item">';
+                html += '  <span class="bar-value">' + val + '</span>';
+                html += '  <div class="bar-fill" style="height: ' + heightPercent + '%;"></div>';
+                html += '  <span class="bar-label">' + group + '</span>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+
+            // Animate bars in
+            setTimeout(function() {
+                var fills = container.querySelectorAll('.bar-fill');
+                fills.forEach(function(fill) {
+                    var h = fill.style.height;
+                    fill.style.height = '0%';
+                    setTimeout(function() {
+                        fill.style.height = h;
+                    }, 100);
+                });
+            }, 200);
+        }
+
+        // ===== RENDER CITY DONUT CHART =====
+        function renderCityDonutChart(cityData) {
+            var container = document.getElementById('cityChartArea');
+            var cities = Object.values(cityData).sort(function(a, b) {
+                return b.units - a.units;
+            });
+
+            if (cities.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-chart-pie"></i></div><h4>No Data</h4><p>No city data available yet.</p></div>';
+                return;
+            }
+
+            var totalUnits = 0;
+            cities.forEach(function(c) { totalUnits += c.units; });
+            if (totalUnits === 0) totalUnits = 1;
+
+            var topCities = cities.slice(0, 6);
+            var otherUnits = 0;
+            if (cities.length > 6) {
+                for (var i = 6; i < cities.length; i++) {
+                    otherUnits += cities[i].units;
+                }
+            }
+
+            // SVG Donut
+            var circumference = 2 * Math.PI * 70;
+            var offset = 0;
+            var segments = '';
+            var legendHtml = '';
+
+            topCities.forEach(function(city, idx) {
+                var percent = city.units / totalUnits;
+                var segLen = percent * circumference;
+                var color = CHART_COLORS[idx % CHART_COLORS.length];
+
+                segments += '<circle class="donut-segment" stroke="' + color + '" stroke-dasharray="' + segLen + ' ' + (circumference - segLen) + '" stroke-dashoffset="-' + offset + '" />';
+                offset += segLen;
+
+                legendHtml += '<div class="legend-item">';
+                legendHtml += '  <div class="legend-color" style="background:' + color + ';"></div>';
+                legendHtml += '  <span class="legend-name">' + escapeHtml(city.display) + '</span>';
+                legendHtml += '  <span class="legend-value">' + city.units + '</span>';
+                legendHtml += '</div>';
+            });
+
+            if (otherUnits > 0) {
+                var percent = otherUnits / totalUnits;
+                var segLen = percent * circumference;
+                var color = '#bdc3c7';
+                segments += '<circle class="donut-segment" stroke="' + color + '" stroke-dasharray="' + segLen + ' ' + (circumference - segLen) + '" stroke-dashoffset="-' + offset + '" />';
+
+                legendHtml += '<div class="legend-item">';
+                legendHtml += '  <div class="legend-color" style="background:' + color + ';"></div>';
+                legendHtml += '  <span class="legend-name">Others</span>';
+                legendHtml += '  <span class="legend-value">' + otherUnits + '</span>';
+                legendHtml += '</div>';
+            }
+
+            var html = '';
+            html += '<div class="donut-wrapper">';
+            html += '  <svg class="donut-svg" viewBox="0 0 180 180">';
+            html += '    <circle class="donut-bg" />';
+            html += segments;
+            html += '  </svg>';
+            html += '  <div class="donut-center-text">';
+            html += '    <div class="donut-number">' + cities.length + '</div>';
+            html += '    <div class="donut-label">Cities</div>';
+            html += '  </div>';
+            html += '</div>';
+            html += '<div class="donut-legend">' + legendHtml + '</div>';
+
+            container.innerHTML = html;
+        }
+
+        // ===== RENDER CITY TABLE =====
+        function renderCityTable(cityData) {
+            var tbody = document.getElementById('cityTableBody');
+            var emptyState = document.getElementById('cityEmptyState');
+            var countEl = document.getElementById('cityTableCount');
+
+            var cities = Object.values(cityData).sort(function(a, b) {
+                return b.units - a.units;
+            });
+
+            countEl.textContent = cities.length + ' Cit' + (cities.length !== 1 ? 'ies' : 'y');
+
+            if (cities.length === 0) {
+                document.getElementById('cityTable').style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            var maxUnits = cities[0] ? cities[0].units : 1;
+            if (maxUnits === 0) maxUnits = 1;
+
+            var html = '';
+            cities.forEach(function(city, idx) {
+                var barPercent = (city.units / maxUnits) * 100;
+
+                html += '<tr>';
+                html += '<td><div class="table-rank">' + (idx + 1) + '</div></td>';
+                html += '<td><div class="table-city"><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(city.display) + '</div></td>';
+                html += '<td><strong>' + city.providers + '</strong></td>';
+                html += '<td>';
+                var badgeClass = city.units >= 20 ? 'high' : (city.units >= 5 ? 'medium' : 'low');
+                html += '<span class="table-units-badge ' + badgeClass + '"><i class="fas fa-tint"></i> ' + city.units + ' units</span>';
+                html += '</td>';
+                html += '<td><div class="city-bar"><div class="city-bar-fill"><div class="fill" style="width:' + barPercent + '%;"></div></div><span class="city-bar-value">' + Math.round(barPercent) + '%</span></div></td>';
+                html += '</tr>';
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // ===== RENDER PROVIDER TABLE =====
+        function renderProviderTable(providers) {
+            var tbody = document.getElementById('providerTableBody');
+            var emptyState = document.getElementById('providerEmptyState');
+            var countEl = document.getElementById('providerTableCount');
+
+            countEl.textContent = providers.length + ' Provider' + (providers.length !== 1 ? 's' : '');
+
+            if (providers.length === 0) {
+                document.getElementById('providerTable').style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            // Sort by total units descending
+            var sorted = providers.slice().sort(function(a, b) {
+                var aUnits = 0, bUnits = 0;
+                (a.bloodStock || []).forEach(function(s) { aUnits += parseInt(s.units) || 0; });
+                (b.bloodStock || []).forEach(function(s) { bUnits += parseInt(s.units) || 0; });
+                return bUnits - aUnits;
+            });
+
+            var html = '';
+            sorted.forEach(function(prov, idx) {
+                var stock = prov.bloodStock || [];
+                var totalUnits = 0;
+                var activeGroups = 0;
+                stock.forEach(function(s) {
+                    var u = parseInt(s.units) || 0;
+                    totalUnits += u;
+                    if (u > 0) activeGroups++;
+                });
+
+                var badgeClass = totalUnits >= 20 ? 'high' : (totalUnits >= 5 ? 'medium' : 'low');
+
+                html += '<tr>';
+                html += '<td><div class="table-rank">' + (idx + 1) + '</div></td>';
+                html += '<td><div class="table-hospital"><div class="table-hospital-icon"><i class="fas fa-hospital-alt"></i></div><span class="table-hospital-name">' + escapeHtml(prov.hospitalName) + '</span></div></td>';
+                html += '<td><div class="table-city"><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(prov.city || '--') + '</div></td>';
+                html += '<td><span class="table-groups-count">' + activeGroups + ' / 8</span></td>';
+                html += '<td><span class="table-units-badge ' + badgeClass + '"><i class="fas fa-tint"></i> ' + totalUnits + '</span></td>';
+                html += '<td><span class="table-date">' + formatDate(prov.registeredAt) + '</span></td>';
+                html += '</tr>';
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // ===== RENDER SEEKER TABLE =====
+        function renderSeekerTable(seekers) {
+            var tbody = document.getElementById('seekerTableBody');
+            var emptyState = document.getElementById('seekerEmptyState');
+            var countEl = document.getElementById('seekerTableCount');
+
+            countEl.textContent = seekers.length + ' Seeker' + (seekers.length !== 1 ? 's' : '');
+
+            if (seekers.length === 0) {
+                document.getElementById('seekerTable').style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            // Sort by registration date (newest first)
+            var sorted = seekers.slice().sort(function(a, b) {
+                return new Date(b.registeredAt || 0) - new Date(a.registeredAt || 0);
+            });
+
+            var html = '';
+            sorted.forEach(function(seeker, idx) {
+                html += '<tr>';
+                html += '<td><div class="table-rank">' + (idx + 1) + '</div></td>';
+                html += '<td><div class="table-user"><div class="table-user-avatar"><i class="fas fa-user"></i></div><span class="table-user-name">' + escapeHtml(seeker.name) + '</span></div></td>';
+                html += '<td><span class="table-email">' + escapeHtml(seeker.email) + '</span></td>';
+                html += '<td><span class="table-phone">' + escapeHtml(seeker.mobile || '--') + '</span></td>';
+                html += '<td><span class="table-date">' + formatDate(seeker.registeredAt) + '</span></td>';
+                html += '</tr>';
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // ===== REFRESH DASHBOARD =====
+        function refreshDashboard() {
+            loadDashboardData();
+        }
+
+        // ===== LOGOUT MODAL =====
+        function showLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) hideLogoutModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') hideLogoutModal();
+        });
+
+        // ===== PERFORM LOGOUT =====
+        function performLogout() {
+            localStorage.removeItem(SESSION_KEYS.isLoggedIn);
+            localStorage.removeItem(SESSION_KEYS.loginTime);
+            localStorage.removeItem(SESSION_KEYS.sessionToken);
+            window.location.href = 'admin-login.html';
+        }
+
+        // ===== SCROLL TO TOP =====
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ===== SCROLL ANIMATION OBSERVER =====
+        var dashObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.dashboard-section, .chart-card, .stat-card').forEach(function(el, idx) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(25px)';
+            el.style.transition = 'opacity 0.6s ease ' + (idx * 0.06) + 's, transform 0.6s ease ' + (idx * 0.06) + 's';
+            dashObserver.observe(el);
+        });
+
+        // ===== CONSOLE BRANDING =====
+        console.log('%c BloodAvail – Admin Dashboard ', 'background: linear-gradient(135deg, #dc3545, #a71d2a); color: white; font-size: 14px; padding: 10px 20px; border-radius: 6px; font-weight: bold;');
+    </script>
+</body>
+</html>
